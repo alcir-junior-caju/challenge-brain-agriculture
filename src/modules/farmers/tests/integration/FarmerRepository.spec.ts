@@ -22,14 +22,14 @@ describe('FarmerRepository Integration Tests', () => {
       id: new IdValueObject(chance.guid()),
       name: new NameValueObject(chance.name()),
       email: new EmailValueObject(chance.email()),
-      taxId: new TaxIdValueObject(chance.cpf({ formatted: false }))
+      document: new TaxIdValueObject(chance.cpf({ formatted: false }))
     })
     await farmerRepository.save(farmerEntity)
     const output = await farmerRepository.find(farmerEntity.id.value)
     expect(output.id.value).toBe(farmerEntity.id.value)
     expect(output.name.value).toBe(farmerEntity.name.value)
     expect(output.email.value).toBe(farmerEntity.email.value)
-    expect(output.taxId.value).toBe(farmerEntity.taxId.value)
+    expect(output.document.value).toBe(farmerEntity.document.value)
     await farmerRepository.delete(farmerEntity.id.value)
   })
 
@@ -42,14 +42,14 @@ describe('FarmerRepository Integration Tests', () => {
       id: new IdValueObject(chance.guid()),
       name: new NameValueObject(chance.name()),
       email: new EmailValueObject(chance.email()),
-      taxId: new TaxIdValueObject(chance.cpf({ formatted: false }))
+      document: new TaxIdValueObject(chance.cpf({ formatted: false }))
     })
     await farmerRepository.save(farmerEntity)
     const output = await farmerRepository.find(farmerEntity.id.value)
     expect(output.id.value).toBe(farmerEntity.id.value)
     expect(output.name.value).toBe(farmerEntity.name.value)
     expect(output.email.value).toBe(farmerEntity.email.value)
-    expect(output.taxId.value).toBe(farmerEntity.taxId.value)
+    expect(output.document.value).toBe(farmerEntity.document.value)
     await farmerRepository.delete(farmerEntity.id.value)
   })
 
@@ -58,14 +58,14 @@ describe('FarmerRepository Integration Tests', () => {
       id: new IdValueObject(chance.guid()),
       name: new NameValueObject(chance.name()),
       email: new EmailValueObject(chance.email()),
-      taxId: new TaxIdValueObject(chance.cpf({ formatted: false }))
+      document: new TaxIdValueObject(chance.cpf({ formatted: false }))
     })
     await farmerRepository.save(farmerEntity)
     const farmerUpdated = {
       id: new IdValueObject(farmerEntity.id.value),
       name: new NameValueObject(chance.name()),
       email: new EmailValueObject(chance.email()),
-      taxId: new TaxIdValueObject(chance.cpf({ formatted: false }))
+      document: new TaxIdValueObject(chance.cpf({ formatted: false }))
     }
     const farmerUpdatedEntity = new FarmerEntity(farmerUpdated)
     await farmerRepository.update(farmerUpdatedEntity)
@@ -73,7 +73,7 @@ describe('FarmerRepository Integration Tests', () => {
     expect(output.id.value).toBe(farmerUpdatedEntity.id.value)
     expect(output.name.value).toBe(farmerUpdatedEntity.name.value)
     expect(output.email.value).toBe(farmerUpdatedEntity.email.value)
-    expect(output.taxId.value).toBe(farmerUpdatedEntity.taxId.value)
+    expect(output.document.value).toBe(farmerUpdatedEntity.document.value)
     await farmerRepository.delete(farmerEntity.id.value)
   })
 })

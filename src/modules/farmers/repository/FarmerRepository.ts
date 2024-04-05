@@ -11,11 +11,11 @@ export class FarmerRepository implements FarmerRepositoryInterface {
   }
 
   async save (farmer: FarmerEntity): Promise<void> {
-    await this.connection.query('INSERT INTO brain_agriculture.farmers (id, name, email, tax_id) VALUES ($1, $2, $3, $4)', [farmer.id.value, farmer.name.value, farmer.email.value, farmer.taxId.value])
+    await this.connection.query('INSERT INTO brain_agriculture.farmers (id, name, email, document) VALUES ($1, $2, $3, $4)', [farmer.id.value, farmer.name.value, farmer.email.value, farmer.document.value])
   }
 
   async update (farmer: FarmerEntity): Promise<void> {
-    await this.connection.query('UPDATE brain_agriculture.farmers SET name = $1, email = $2, tax_id = $3 WHERE id = $4', [farmer.name.value, farmer.email.value, farmer.taxId.value, farmer.id.value])
+    await this.connection.query('UPDATE brain_agriculture.farmers SET name = $1, email = $2, document = $3 WHERE id = $4', [farmer.name.value, farmer.email.value, farmer.document.value, farmer.id.value])
   }
 
   async find (id: string): Promise<FarmerEntity> {
@@ -25,7 +25,7 @@ export class FarmerRepository implements FarmerRepositoryInterface {
       id: new IdValueObject(String(farmerData.id)),
       name: new NameValueObject(farmerData.name),
       email: new EmailValueObject(farmerData.email),
-      taxId: new TaxIdValueObject(farmerData.tax_id),
+      document: new TaxIdValueObject(farmerData.document),
       createdAt: farmerData.created_at,
       updatedAt: farmerData.updated_at
     })

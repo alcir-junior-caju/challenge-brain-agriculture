@@ -18,7 +18,7 @@ export class GetFarmerUseCase implements UseCaseInterface<InputGetFarmerDto, Out
       id: farmer.id.value,
       name: farmer.name.value,
       email: farmer.email.value,
-      taxId: farmer.taxId.value,
+      document: farmer.document.value,
       createdAt: farmer.createdAt,
       updatedAt: farmer.updatedAt
     }

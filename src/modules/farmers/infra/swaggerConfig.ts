@@ -6,13 +6,13 @@ const tags = ['Farmers']
 const farmerSchemaRequest = z.object({
   name: z.string().min(3),
   email: z.string().email(),
-  taxId: z.string().min(11)
+  document: z.string()
 })
 
 const farmerSchemaResponse = z.object({
   name: z.string().min(3),
   email: z.string().email(),
-  taxId: z.string().min(11),
+  document: z.string(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime()
 })

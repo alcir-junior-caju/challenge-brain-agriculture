@@ -1,10 +1,10 @@
-import { type AggregateRootInterface, BaseEntity, type EmailValueObject, type IdValueObject, type NameValueObject, type TaxIdValueObject } from '@modules/shared'
+import { type AggregateRootInterface, BaseEntity, type EmailValueObject, type IdValueObject, type NameValueObject, type TaxIdValueObject, type TaxPayerIdValueObject } from '@modules/shared'
 
 interface Input {
   id?: IdValueObject
   name: NameValueObject
   email: EmailValueObject
-  taxId?: TaxIdValueObject
+  document: TaxIdValueObject | TaxPayerIdValueObject
   createdAt?: Date
   updatedAt?: Date
 }
@@ -12,13 +12,13 @@ interface Input {
 export class FarmerEntity extends BaseEntity implements AggregateRootInterface {
   private readonly _name: NameValueObject
   private readonly _email: EmailValueObject
-  private readonly _taxId?: TaxIdValueObject
+  private readonly _document: TaxIdValueObject | TaxPayerIdValueObject
 
-  constructor ({ id, name, email, taxId, createdAt, updatedAt }: Input) {
+  constructor ({ id, name, email, document, createdAt, updatedAt }: Input) {
     super(id, createdAt, updatedAt)
     this._name = name
     this._email = email
-    if (taxId) this._taxId = taxId
+    this._document = document
   }
 
   get name (): NameValueObject {
@@ -29,8 +29,7 @@ export class FarmerEntity extends BaseEntity implements AggregateRootInterface {
     return this._email
   }
 
-  get taxId (): TaxIdValueObject {
-    if (!this._taxId) throw new Error('tax_id_is_not_defined')
-    return this._taxId
+  get document (): TaxIdValueObject | TaxPayerIdValueObject {
+    return this._document
   }
 }

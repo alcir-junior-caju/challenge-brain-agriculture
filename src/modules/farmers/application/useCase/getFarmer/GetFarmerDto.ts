@@ -6,7 +6,7 @@ export interface OutputGetFarmerDto {
   id: string
   name: string
   email: string
-  taxId: string
+  document: string
   createdAt: Date
   updatedAt: Date
 }

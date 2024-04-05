@@ -1,5 +1,5 @@
 #!/bin/bash
 
-yarn
+yarn && yarn dev
 
 tail -f /dev/null

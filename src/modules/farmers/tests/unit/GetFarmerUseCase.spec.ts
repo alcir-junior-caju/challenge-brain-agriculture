@@ -6,13 +6,13 @@ const chance = new Chance()
 const idString = chance.guid()
 const nameString = chance.name()
 const emailString = chance.email()
-const taxIdString = chance.cpf({ formatted: false })
+const documentString = chance.cpf({ formatted: false })
 
 const farmerStub = new FarmerEntity({
   id: new IdValueObject(idString),
   name: new NameValueObject(nameString),
   email: new EmailValueObject(emailString),
-  taxId: new TaxIdValueObject(taxIdString)
+  document: new TaxIdValueObject(documentString)
 })
 
 const MockFarmerRepository = (empty?: boolean): FarmerRepositoryInterface => ({
@@ -34,7 +34,7 @@ describe('GetFarmerUseCase Unit Tests', () => {
     expect(output.id).toBe(farmerStub.id.value)
     expect(output.name).toBe(farmerStub.name.value)
     expect(output.email).toBe(farmerStub.email.value)
-    expect(output.taxId).toBe(farmerStub.taxId.value)
+    expect(output.document).toBe(farmerStub.document.value)
   })
 
   it('should not be able to get a farmer if not exists', async () => {

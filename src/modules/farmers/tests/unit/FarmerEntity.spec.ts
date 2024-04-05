@@ -1,12 +1,12 @@
 import { FarmerEntity } from '@modules/farmers'
-import { EmailValueObject, IdValueObject, InvalidEmailError, InvalidNameError, InvalidTaxIdError, InvalidUUIDError, NameValueObject, TaxIdValueObject } from '@modules/shared'
+import { EmailValueObject, IdValueObject, InvalidEmailError, InvalidNameError, InvalidTaxIdError, InvalidTaxPayerIdError, InvalidUUIDError, NameValueObject, TaxIdValueObject, TaxPayerIdValueObject } from '@modules/shared'
 import { Chance } from 'chance'
 
 const chance = new Chance()
 const idString = chance.guid()
 const nameString = chance.name()
 const emailString = chance.email()
-const taxIdString = chance.cpf({ formatted: false })
+const documentString = chance.cpf({ formatted: false })
 const invalidIdString = chance.word()
 const invalidNameString = chance.letter({ length: 1 })
 const invalidEmailString = chance.word()
@@ -14,7 +14,8 @@ const invalidEmailString = chance.word()
 const farmerStub = {
   id: new IdValueObject(idString),
   name: new NameValueObject(nameString),
-  email: new EmailValueObject(emailString)
+  email: new EmailValueObject(emailString),
+  document: new TaxIdValueObject(documentString)
 }
 
 describe('FarmerEntity Unit Tests', () => {
@@ -27,6 +28,8 @@ describe('FarmerEntity Unit Tests', () => {
     expect(farmerEntity.name.value).toBe(farmerStub.name.value)
     expect(farmerEntity.email).toBeInstanceOf(EmailValueObject)
     expect(farmerEntity.email.value).toBe(farmerStub.email.value)
+    expect(farmerEntity.document).toBeInstanceOf(TaxIdValueObject)
+    expect(farmerEntity.document.value).toBe(farmerStub.document.value)
     expect(farmerEntity.createdAt).toBeInstanceOf(Date)
     expect(farmerEntity.updatedAt).toBeInstanceOf(Date)
   })
@@ -45,15 +48,17 @@ describe('FarmerEntity Unit Tests', () => {
     expect(farmerEntity.name.value).toBe(farmerStub.name.value)
     expect(farmerEntity.email).toBeInstanceOf(EmailValueObject)
     expect(farmerEntity.email.value).toBe(farmerStub.email.value)
+    expect(farmerEntity.document).toBeInstanceOf(TaxIdValueObject)
+    expect(farmerEntity.document.value).toBe(farmerStub.document.value)
     expect(farmerEntity.createdAt).toBeInstanceOf(Date)
     expect(farmerEntity.updatedAt).toBeInstanceOf(Date)
   })
 
-  it('should be create a new farmer entity with tax id', () => {
-    const taxId = new TaxIdValueObject(taxIdString)
+  it('should be create a new farmer entity with document tax id', () => {
+    const document = new TaxIdValueObject(documentString)
     const farmerEntity = new FarmerEntity({
       ...farmerStub,
-      taxId
+      document
     })
     expect(farmerEntity).toBeInstanceOf(FarmerEntity)
     expect(farmerEntity.id).toBeInstanceOf(IdValueObject)
@@ -62,8 +67,25 @@ describe('FarmerEntity Unit Tests', () => {
     expect(farmerEntity.name.value).toBe(farmerStub.name.value)
     expect(farmerEntity.email).toBeInstanceOf(EmailValueObject)
     expect(farmerEntity.email.value).toBe(farmerStub.email.value)
-    expect(farmerEntity.taxId).toBeInstanceOf(TaxIdValueObject)
-    expect(farmerEntity.taxId.value).toBe(taxId.value)
+    expect(farmerEntity.document).toBeInstanceOf(TaxIdValueObject)
+    expect(farmerEntity.document.value).toBe(document.value)
+  })
+
+  it('should be create a new farmer entity with document tax payer id', () => {
+    const document = new TaxPayerIdValueObject('93347828000100')
+    const farmerEntity = new FarmerEntity({
+      ...farmerStub,
+      document
+    })
+    expect(farmerEntity).toBeInstanceOf(FarmerEntity)
+    expect(farmerEntity.id).toBeInstanceOf(IdValueObject)
+    expect(farmerEntity.id.value).toBe(farmerStub.id.value)
+    expect(farmerEntity.name).toBeInstanceOf(NameValueObject)
+    expect(farmerEntity.name.value).toBe(farmerStub.name.value)
+    expect(farmerEntity.email).toBeInstanceOf(EmailValueObject)
+    expect(farmerEntity.email.value).toBe(farmerStub.email.value)
+    expect(farmerEntity.document).toBeInstanceOf(TaxPayerIdValueObject)
+    expect(farmerEntity.document.value).toBe(document.value)
   })
 
   it('should be throw an error if id is invalid', () => {
@@ -84,9 +106,13 @@ describe('FarmerEntity Unit Tests', () => {
     }).toThrow(new InvalidEmailError())
   })
 
-  it('should be throw an error if taxId is invalid', () => {
+  it('should be throw an error if document is invalid', () => {
     expect(() => {
-      new FarmerEntity({ ...farmerStub, taxId: new TaxIdValueObject('11111111111') })
+      new FarmerEntity({ ...farmerStub, document: new TaxIdValueObject('11111111111') })
     }).toThrow(new InvalidTaxIdError())
+
+    expect(() => {
+      new FarmerEntity({ ...farmerStub, document: new TaxPayerIdValueObject('11111111111111') })
+    }).toThrow(new InvalidTaxPayerIdError())
   })
 })

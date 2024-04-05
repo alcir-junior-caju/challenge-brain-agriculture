@@ -34,7 +34,6 @@ export class FarmerHttpController {
       createRoute(farmerGetRoute),
       async ({ params }: { params: Params }) => {
         const { id } = params
-        console.log('id', id)
         const output = await this.getFarmerUseCase.execute({ id })
         return output
       }

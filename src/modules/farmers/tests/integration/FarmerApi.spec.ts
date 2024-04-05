@@ -7,10 +7,10 @@ const chance = new Chance()
 const idString = chance.guid()
 const nameString = chance.name()
 const emailString = chance.email()
-const taxIdString = chance.cpf({ formatted: false })
+const documentString = chance.cpf({ formatted: false })
 const nameChangedString = chance.name()
 const emailChangedString = chance.email()
-const taxIdChangedString = chance.cpf({ formatted: false })
+const documentChangedString = chance.cpf({ formatted: false })
 
 describe('FarmerApi Integration Tests', () => {
   let connection: PgPromiseAdapter
@@ -31,13 +31,13 @@ describe('FarmerApi Integration Tests', () => {
       id: new IdValueObject(idString),
       name: new NameValueObject(nameString),
       email: new EmailValueObject(emailString),
-      taxId: new TaxIdValueObject(taxIdString)
+      document: new TaxIdValueObject(documentString)
     })
     await farmerRepository.save(entity)
     const input = {
       name: nameChangedString,
       email: emailChangedString,
-      taxId: taxIdChangedString
+      document: documentChangedString
     }
     const response = await httpClient.patch(
       `http://localhost:3000/farmers/${entity.id.value}`,
@@ -49,7 +49,7 @@ describe('FarmerApi Integration Tests', () => {
       id: entity.id.value,
       name: input.name,
       email: input.email,
-      taxId: input.taxId,
+      document: input.document,
       createdAt: expect.any(String),
       updatedAt: expect.any(String)
     })
@@ -62,7 +62,7 @@ describe('FarmerApi Integration Tests', () => {
       id: new IdValueObject(idString),
       name: new NameValueObject(nameString),
       email: new EmailValueObject(emailString),
-      taxId: new TaxIdValueObject(taxIdString)
+      document: new TaxIdValueObject(documentString)
     })
     await farmerRepository.save(entity)
     const response = await httpClient.get(`http://localhost:3000/farmers/${entity.id.value}`)
@@ -71,7 +71,7 @@ describe('FarmerApi Integration Tests', () => {
       id: entity.id.value,
       name: entity.name.value,
       email: entity.email.value,
-      taxId: entity.taxId.value,
+      document: entity.document.value,
       createdAt: expect.any(String),
       updatedAt: expect.any(String)
     })
