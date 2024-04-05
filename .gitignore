@@ -1,0 +1,6 @@
+node_modules
+.env
+coverage
+databases/postgres
+databases/mysql
+dist

@@ -1,0 +1,39 @@
+version: '3'
+
+networks:
+  brain-agriculture:
+    external: true
+
+services:
+  brain-app:
+    build: ./.docker
+    container_name: brain-app
+    command: ./.docker/start.sh
+    ports:
+      - 3000:3000
+    expose:
+      - 3000
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - brain-postgres
+    networks:
+      - brain-agriculture
+
+  brain-postgres:
+    image: postgres:latest
+    container_name: brain-postgres
+    platform: linux/x86_64
+    restart: always
+    tty: true
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - 5432:5432
+    volumes:
+      - ./databases/dumps/postgres.sql:/docker-entrypoint-initdb.d/postgres.sql
+      - ./databases/postgres:/var/lib/postgresql/data
+    networks:
+      - brain-agriculture

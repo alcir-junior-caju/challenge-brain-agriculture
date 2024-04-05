@@ -1,0 +1,38 @@
+import { type ConnectionInterface, EmailValueObject, IdValueObject, NameValueObject, TaxIdValueObject } from '@modules/shared'
+
+import { type FarmerRepositoryInterface } from '../application'
+import { FarmerEntity } from '../domain'
+
+export class FarmerRepository implements FarmerRepositoryInterface {
+  connection: ConnectionInterface
+
+  constructor (connection: ConnectionInterface) {
+    this.connection = connection
+  }
+
+  async save (farmer: FarmerEntity): Promise<void> {
+    await this.connection.query('INSERT INTO brain_agriculture.farmers (id, name, email, tax_id) VALUES ($1, $2, $3, $4)', [farmer.id.value, farmer.name.value, farmer.email.value, farmer.taxId.value])
+  }
+
+  async update (farmer: FarmerEntity): Promise<void> {
+    await this.connection.query('UPDATE brain_agriculture.farmers SET name = $1, email = $2, tax_id = $3 WHERE id = $4', [farmer.name.value, farmer.email.value, farmer.taxId.value, farmer.id.value])
+  }
+
+  async find (id: string): Promise<FarmerEntity> {
+    const [farmerData] = await this.connection.query('SELECT * FROM brain_agriculture.farmers WHERE id = $1', [id])
+    if (!farmerData) throw new Error('farmer_not_found')
+    const farmerEntity = new FarmerEntity({
+      id: new IdValueObject(String(farmerData.id)),
+      name: new NameValueObject(farmerData.name),
+      email: new EmailValueObject(farmerData.email),
+      taxId: new TaxIdValueObject(farmerData.tax_id),
+      createdAt: farmerData.created_at,
+      updatedAt: farmerData.updated_at
+    })
+    return farmerEntity
+  }
+
+  async delete (id: string): Promise<void> {
+    await this.connection.query('DELETE FROM brain_agriculture.farmers WHERE id = $1', [id])
+  }
+}
