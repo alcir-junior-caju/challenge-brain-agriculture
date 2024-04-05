@@ -2,24 +2,35 @@ import { createRoute } from '@hono/zod-openapi'
 import { type HttpServerInterface } from '@modules/shared'
 import { type Params } from 'hono/router'
 
-import { type ChangeFarmerUseCase, type GetFarmerUseCase } from '../application'
+import { type ChangeFarmerUseCase, type CreateFarmerUseCase, type GetFarmerUseCase, type InputCreateFarmerDto } from '../application'
 import { type InputChangeFarmerDto } from '../application/useCase/changeFarmer/ChangeFarmerDto'
 
-import { farmerGetRoute, farmerPatchRoute } from './swaggerConfig'
+import { farmerGetRoute, farmerPatchRoute, farmerPostRoute } from './swaggerConfig'
 
 export class FarmerHttpController {
   private readonly httpServer: HttpServerInterface
+  private readonly createFarmerUseCase: CreateFarmerUseCase
   private readonly changeFarmerUseCase: ChangeFarmerUseCase
   private readonly getFarmerUseCase: GetFarmerUseCase
 
   constructor (
     httpServer: HttpServerInterface,
+    createFarmerUseCase: CreateFarmerUseCase,
     changeFarmerUseCase: ChangeFarmerUseCase,
     getFarmerUseCase: GetFarmerUseCase
   ) {
     this.httpServer = httpServer
+    this.createFarmerUseCase = createFarmerUseCase
     this.changeFarmerUseCase = changeFarmerUseCase
     this.getFarmerUseCase = getFarmerUseCase
+
+    this.httpServer.on(
+      createRoute(farmerPostRoute),
+      async ({ body }: { body: InputCreateFarmerDto }) => {
+        const output = await this.createFarmerUseCase.execute(body)
+        return output
+      }
+    )
 
     this.httpServer.on(
       createRoute(farmerPatchRoute),

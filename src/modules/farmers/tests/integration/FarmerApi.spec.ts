@@ -25,6 +25,60 @@ describe('FarmerApi Integration Tests', () => {
     await connection.close()
   })
 
+  it('should post farmer api', async () => {
+    const httpClient = new AxiosAdapter()
+    const input = {
+      name: nameString,
+      email: emailString,
+      document: documentString
+    }
+    const response = await httpClient.post('http://localhost:3000/farmers', input)
+    const { data } = response
+    expect(response.status).toBe(200)
+    expect(data).toEqual({
+      id: expect.any(String),
+      name: input.name,
+      email: input.email,
+      document: input.document,
+      createdAt: expect.any(String),
+      updatedAt: expect.any(String)
+    })
+    await farmerRepository.delete(data.id)
+  })
+
+  it('should post farmer with empty name api', async () => {
+    const httpClient = new AxiosAdapter()
+    const input = {
+      name: '',
+      email: emailString,
+      document: documentString
+    }
+    const response = await httpClient.post('http://localhost:3000/farmers', input)
+    const { data } = response
+    expect(response.status).toBe(400)
+    expect(data.success).toBe(false)
+    expect(data.error.issues[0].path).toEqual(['name'])
+    expect(data.error.issues[0].code).toEqual('too_small')
+    expect(data.error.name).toEqual('ZodError')
+  })
+
+  it('should post farmer with invalid email api', async () => {
+    const httpClient = new AxiosAdapter()
+    const input = {
+      name: nameString,
+      email: 'john@t',
+      document: documentString
+    }
+    const response = await httpClient.post('http://localhost:3000/farmers', input)
+    const { data } = response
+    expect(response.status).toBe(400)
+    expect(data.success).toBe(false)
+    expect(data.error.issues[0].path).toEqual(['email'])
+    expect(data.error.issues[0].code).toEqual('invalid_string')
+    expect(data.error.issues[0].validation).toEqual('email')
+    expect(data.error.name).toEqual('ZodError')
+  })
+
   it('should update farmer api', async () => {
     const httpClient = new AxiosAdapter()
     const entity = new FarmerEntity({
