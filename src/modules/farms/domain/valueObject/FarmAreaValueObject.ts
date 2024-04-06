@@ -4,12 +4,12 @@ export class FarmAreaValueObject implements ValueObjectInterface {
   private readonly _value: number
 
   constructor (name: number) {
-    this._value = name
+    this._value = Number(name)
     this.validate(name)
   }
 
   get value (): number {
-    return this._value
+    return Number(this._value)
   }
 
   private validate (name: number): void {
