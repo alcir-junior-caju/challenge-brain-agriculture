@@ -36,6 +36,7 @@ const MockFarmerRepository = (notFound?: boolean, taxPayerId?: boolean): FarmerR
     ...(taxPayerId ? { document: new TaxPayerIdValueObject('73300397000100') } : { document: new TaxIdValueObject(documentStringChange) })
   })),
   find: notFound ? vitest.fn() : vitest.fn().mockResolvedValue(Promise.resolve(farmerStub)),
+  findAll: vitest.fn().mockResolvedValue(Promise.resolve([farmerStub])),
   delete: vitest.fn()
 })
 

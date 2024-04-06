@@ -1,4 +1,4 @@
-import { type ConnectionInterface, EmailValueObject, IdValueObject, NameValueObject, TaxIdValueObject } from '@modules/shared'
+import { type ConnectionInterface, EmailValueObject, IdValueObject, NameValueObject, TaxIdValueObject, TaxPayerIdValueObject } from '@modules/shared'
 
 import { type FarmerRepositoryInterface } from '../application'
 import { FarmerEntity } from '../domain'
@@ -25,11 +25,28 @@ export class FarmerRepository implements FarmerRepositoryInterface {
       id: new IdValueObject(String(farmerData.id)),
       name: new NameValueObject(farmerData.name),
       email: new EmailValueObject(farmerData.email),
-      document: new TaxIdValueObject(farmerData.document),
+      document: farmerData.document.length === 11 ? new TaxIdValueObject(farmerData.document) : new TaxPayerIdValueObject(farmerData.document),
       createdAt: farmerData.created_at,
       updatedAt: farmerData.updated_at
     })
     return farmerEntity
+  }
+
+  async findAll (): Promise<FarmerEntity[]> {
+    const farmersData = await this.connection.query('SELECT * FROM brain_agriculture.farmers')
+    const farmers = []
+    for (const farmerData of farmersData) {
+      const farmerEntity = new FarmerEntity({
+        id: new IdValueObject(String(farmerData.id)),
+        name: new NameValueObject(farmerData.name),
+        email: new EmailValueObject(farmerData.email),
+        document: farmerData.document.length === 11 ? new TaxIdValueObject(farmerData.document) : new TaxPayerIdValueObject(farmerData.document),
+        createdAt: farmerData.created_at,
+        updatedAt: farmerData.updated_at
+      })
+      farmers.push(farmerEntity)
+    }
+    return farmers
   }
 
   async delete (id: string): Promise<void> {

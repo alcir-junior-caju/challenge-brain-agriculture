@@ -22,6 +22,7 @@ const MockFarmerRepository = (): FarmerRepositoryInterface => ({
   save: vitest.fn(),
   update: vitest.fn(),
   find: vitest.fn().mockResolvedValue(Promise.resolve(farmerStub)),
+  findAll: vitest.fn().mockResolvedValue(Promise.resolve([farmerStub])),
   delete: vitest.fn()
 })
 

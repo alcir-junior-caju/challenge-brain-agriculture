@@ -19,6 +19,7 @@ const MockFarmerRepository = (empty?: boolean): FarmerRepositoryInterface => ({
   save: vitest.fn(),
   update: vitest.fn(),
   find: empty ? vitest.fn().mockResolvedValue(Promise.resolve(null)) : vitest.fn().mockResolvedValue(Promise.resolve(farmerStub)),
+  findAll: vitest.fn().mockResolvedValue(Promise.resolve([farmerStub])),
   delete: vitest.fn()
 })
 
