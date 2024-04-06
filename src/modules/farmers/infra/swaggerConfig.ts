@@ -23,6 +23,8 @@ const farmerSchemaResponse = z.object({
   updatedAt: z.string().datetime()
 })
 
+const farmerSchemaResponseArray = z.array(farmerSchemaResponse)
+
 const farmerSchemaError = z.object({
   success: z.boolean(),
   error: z.object({
@@ -159,6 +161,24 @@ export const farmerGetRoute = {
         }
       },
       description: 'Farmer not found'
+    }
+  }
+} as const
+
+export const farmersGetRoute = {
+  method: 'get',
+  path: resource,
+  tags,
+  summary: 'Get farmers',
+  description: 'Get farmers description',
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: farmerSchemaResponseArray
+        }
+      },
+      description: 'Farmers found'
     }
   }
 } as const

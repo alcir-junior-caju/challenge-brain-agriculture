@@ -1,4 +1,4 @@
-import { ChangeFarmerUseCase, CreateFarmerUseCase, FarmerHttpController, FarmerRepository, GetFarmerUseCase, HonoAdapter, PgPromiseAdapter } from './modules'
+import { ChangeFarmerUseCase, CreateFarmerUseCase, FarmerHttpController, FarmerRepository, GetFarmersUseCase, GetFarmerUseCase, HonoAdapter, PgPromiseAdapter } from './modules'
 
 async function main (): Promise<void> {
   const connection = new PgPromiseAdapter()
@@ -6,12 +6,14 @@ async function main (): Promise<void> {
   const createFarmer = new CreateFarmerUseCase(farmerRepository)
   const changeFarmer = new ChangeFarmerUseCase(farmerRepository)
   const getFarmer = new GetFarmerUseCase(farmerRepository)
+  const getFarmers = new GetFarmersUseCase(farmerRepository)
   const httpServer = new HonoAdapter()
   new FarmerHttpController(
     httpServer,
     createFarmer,
     changeFarmer,
-    getFarmer
+    getFarmer,
+    getFarmers
   )
   httpServer.listen(3000)
 }

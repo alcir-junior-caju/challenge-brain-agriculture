@@ -4,7 +4,7 @@ import { type FarmerRepositoryInterface } from '../../repository'
 
 import { type InputGetFarmersDto, type OutputGetFarmersDto } from './GetFarmersDto'
 
-export class GetAllFarmersUseCase implements UseCaseInterface<InputGetFarmersDto, OutputGetFarmersDto> {
+export class GetFarmersUseCase implements UseCaseInterface<InputGetFarmersDto, OutputGetFarmersDto> {
   private readonly _farmerRepository: FarmerRepositoryInterface
 
   constructor (farmerRepository: FarmerRepositoryInterface) {

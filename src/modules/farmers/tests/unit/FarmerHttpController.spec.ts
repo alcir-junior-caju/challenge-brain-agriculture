@@ -23,15 +23,17 @@ describe('FarmerHttpController Unit Tests', () => {
       mockHttpServer,
       mockFarmerUseCase as any,
       mockFarmerUseCase as any,
+      mockFarmerUseCase as any,
       mockFarmerUseCase as any
     )
-    expect(mockHttpServer.on).toHaveBeenCalledTimes(3)
+    expect(mockHttpServer.on).toHaveBeenCalledTimes(4)
     expect(mockHttpServer.on).toHaveBeenCalledWith(expect.any(Object), expect.any(Function))
   })
 
   it('should be calls CreateFarmerUseCase on post request', async () => {
     new FarmerHttpController(
       mockHttpServer,
+      mockFarmerUseCase as any,
       mockFarmerUseCase as any,
       mockFarmerUseCase as any,
       mockFarmerUseCase as any
@@ -47,6 +49,7 @@ describe('FarmerHttpController Unit Tests', () => {
       mockHttpServer,
       mockFarmerUseCase as any,
       mockFarmerUseCase as any,
+      mockFarmerUseCase as any,
       mockFarmerUseCase as any
     )
     const mockContext = { params: mockParams, body: mockBody }
@@ -60,11 +63,25 @@ describe('FarmerHttpController Unit Tests', () => {
       mockHttpServer,
       mockFarmerUseCase as any,
       mockFarmerUseCase as any,
+      mockFarmerUseCase as any,
       mockFarmerUseCase as any
     )
     const mockContext = { params: mockParams }
     await mockHttpServer.on.mock.calls[2][1](mockContext)
     expect(mockFarmerUseCase.execute).toHaveBeenCalledTimes(3)
     expect(mockFarmerUseCase.execute).toHaveBeenCalledWith({ id: mockParams.id })
+  })
+
+  it('should be calls GetFarmersUseCase on get request', async () => {
+    new FarmerHttpController(
+      mockHttpServer,
+      mockFarmerUseCase as any,
+      mockFarmerUseCase as any,
+      mockFarmerUseCase as any,
+      mockFarmerUseCase as any
+    )
+    await mockHttpServer.on.mock.calls[3][1]()
+    expect(mockFarmerUseCase.execute).toHaveBeenCalledTimes(4)
+    expect(mockFarmerUseCase.execute).toHaveBeenCalledWith({})
   })
 })
