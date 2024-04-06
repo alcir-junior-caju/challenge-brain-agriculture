@@ -4,35 +4,46 @@
 @contentType = application/json
 @userAgent = rest-client
 
-### POST /users
-# @name createuser
-POST {{baseUrl}}/users HTTP/1.1
+### POST /farmers
+# @name createfarmer
+POST {{baseUrl}}/farmers HTTP/1.1
 Content-Type: {{contentType}}
 User-Agent: {{userAgent}}
 
 {
 	"name": "John Doe",
 	"email": "johndoe@email.com",
-	"password": "12345678"
+	"document": "44830197000161"
 }
 
-### Extract userId
-@userId = {{createuser.response.body.id}}
+### Extract farmerId
+@farmerId = {{createfarmer.response.body.id}}
 
-### PUT /users
-# @name updateuser
-PATCH {{baseUrl}}/users/{{userId}} HTTP/1.1
+### PUT /farmers
+# @name updatefarmer
+PATCH {{baseUrl}}/farmers/{{farmerId}} HTTP/1.1
 Content-Type: {{contentType}}
 User-Agent: {{userAgent}}
 
 {
 	"name": "Jane Doe",
-	"email": "janedoe@email.com",
-	"password": "12345678"
+	"email": "janedoe@email.com"
 }
 
-### GET /users
-# @name getusers
-GET {{baseUrl}}/users/{{userId}} HTTP/1.1
+### GET /farmers
+# @name getfarmer
+GET {{baseUrl}}/farmers/{{farmerId}} HTTP/1.1
+Content-Type: {{contentType}}
+User-Agent: {{userAgent}}
+
+### GET /farmers
+# @name getfarmers
+GET {{baseUrl}}/farmers HTTP/1.1
+Content-Type: {{contentType}}
+User-Agent: {{userAgent}}
+
+### DELETE /farmers
+# @name deletefarmer
+DELETE {{baseUrl}}/farmers/{{farmerId}} HTTP/1.1
 Content-Type: {{contentType}}
 User-Agent: {{userAgent}}

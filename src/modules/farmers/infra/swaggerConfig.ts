@@ -25,6 +25,8 @@ const farmerSchemaResponse = z.object({
 
 const farmerSchemaResponseArray = z.array(farmerSchemaResponse)
 
+const farmerSchemaResponseEmpty = z.object({})
+
 const farmerSchemaError = z.object({
   success: z.boolean(),
   error: z.object({
@@ -144,14 +146,6 @@ export const farmerGetRoute = {
       },
       description: 'Farmer found'
     },
-    400: {
-      content: {
-        'application/json': {
-          schema: farmerSchemaError
-        }
-      },
-      description: 'Invalid input'
-    },
     404: {
       content: {
         'application/json': {
@@ -179,6 +173,39 @@ export const farmersGetRoute = {
         }
       },
       description: 'Farmers found'
+    }
+  }
+} as const
+
+export const farmerDeleteRoute = {
+  method: 'delete',
+  path: `${resource}/:id`,
+  tags,
+  summary: 'Delete farmer',
+  description: 'Delete farmer description',
+  request: {
+    params: z.object({
+      id: z.string().uuid()
+    })
+  },
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: farmerSchemaResponseEmpty
+        }
+      },
+      description: 'Farmer deleted'
+    },
+    404: {
+      content: {
+        'application/json': {
+          schema: z.object({
+            message: z.string()
+          })
+        }
+      },
+      description: 'Farmer not found'
     }
   }
 } as const

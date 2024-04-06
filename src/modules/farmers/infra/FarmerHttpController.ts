@@ -2,10 +2,10 @@ import { createRoute } from '@hono/zod-openapi'
 import { type HttpServerInterface } from '@modules/shared'
 import { type Params } from 'hono/router'
 
-import { type ChangeFarmerUseCase, type CreateFarmerUseCase, type GetFarmersUseCase, type GetFarmerUseCase, type InputCreateFarmerDto } from '../application'
+import { type ChangeFarmerUseCase, type CreateFarmerUseCase, type GetFarmersUseCase, type GetFarmerUseCase, type InputCreateFarmerDto, type RemoveFarmerUseCase } from '../application'
 import { type InputChangeFarmerDto } from '../application/useCase/changeFarmer/ChangeFarmerDto'
 
-import { farmerGetRoute, farmerPatchRoute, farmerPostRoute, farmersGetRoute } from './swaggerConfig'
+import { farmerDeleteRoute, farmerGetRoute, farmerPatchRoute, farmerPostRoute, farmersGetRoute } from './swaggerConfig'
 
 export class FarmerHttpController {
   private readonly httpServer: HttpServerInterface
@@ -13,19 +13,22 @@ export class FarmerHttpController {
   private readonly changeFarmerUseCase: ChangeFarmerUseCase
   private readonly getFarmerUseCase: GetFarmerUseCase
   private readonly getFarmersUseCase: GetFarmersUseCase
+  private readonly removeFarmerUseCase: RemoveFarmerUseCase
 
   constructor (
     httpServer: HttpServerInterface,
     createFarmerUseCase: CreateFarmerUseCase,
     changeFarmerUseCase: ChangeFarmerUseCase,
     getFarmerUseCase: GetFarmerUseCase,
-    getFarmersUseCase: GetFarmersUseCase
+    getFarmersUseCase: GetFarmersUseCase,
+    removeFarmerUseCase: RemoveFarmerUseCase
   ) {
     this.httpServer = httpServer
     this.createFarmerUseCase = createFarmerUseCase
     this.changeFarmerUseCase = changeFarmerUseCase
     this.getFarmerUseCase = getFarmerUseCase
     this.getFarmersUseCase = getFarmersUseCase
+    this.removeFarmerUseCase = removeFarmerUseCase
 
     this.httpServer.on(
       createRoute(farmerPostRoute),
@@ -57,6 +60,15 @@ export class FarmerHttpController {
       createRoute(farmersGetRoute),
       async () => {
         const output = await this.getFarmersUseCase.execute({})
+        return output
+      }
+    )
+
+    this.httpServer.on(
+      createRoute(farmerDeleteRoute),
+      async ({ params }: { params: Params }) => {
+        const { id } = params
+        const output = await this.removeFarmerUseCase.execute({ id })
         return output
       }
     )

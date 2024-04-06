@@ -33,4 +33,13 @@ export class AxiosAdapter implements HttpClientInterface {
       status: response.status
     }
   }
+
+  async delete (url: string): Promise<any> {
+    const response = await axios.delete(url)
+    if (response.status === 422) throw new Error(response?.data?.message as string)
+    return {
+      data: response.data,
+      status: response.status
+    }
+  }
 }

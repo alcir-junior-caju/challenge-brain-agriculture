@@ -131,4 +131,34 @@ describe('FarmerApi Integration Tests', () => {
     })
     await farmerRepository.delete(entity.id.value)
   })
+
+  it('should get farmers api', async () => {
+    const httpClient = new AxiosAdapter()
+    const entity = new FarmerEntity({
+      id: new IdValueObject(idString),
+      name: new NameValueObject(nameString),
+      email: new EmailValueObject(emailString),
+      document: new TaxIdValueObject(documentString)
+    })
+    await farmerRepository.save(entity)
+    const response = await httpClient.get('http://localhost:3000/farmers')
+    expect(response.status).toBe(200)
+    expect(response.data.length).toBeGreaterThan(0)
+    await farmerRepository.delete(entity.id.value)
+  })
+
+  it('should remove farmer api', async () => {
+    const httpClient = new AxiosAdapter()
+    const entity = new FarmerEntity({
+      id: new IdValueObject(idString),
+      name: new NameValueObject(nameString),
+      email: new EmailValueObject(emailString),
+      document: new TaxIdValueObject(documentString)
+    })
+    await farmerRepository.save(entity)
+    const response = await httpClient.delete(`http://localhost:3000/farmers/${entity.id.value}`)
+    expect(response.status).toBe(200)
+    console.log('🚀 ~ it ~ response:', response)
+    expect(response.data).toEqual({})
+  })
 })

@@ -4,3 +4,4 @@ coverage
 databases/postgres
 databases/mysql
 dist
+yarn-error.log
