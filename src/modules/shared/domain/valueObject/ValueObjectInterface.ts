@@ -1,3 +1,3 @@
 export interface ValueObjectInterface {
-  get value (): string
+  get value (): any
 }
