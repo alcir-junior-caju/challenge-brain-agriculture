@@ -1,6 +1,6 @@
 import { type AggregateRootInterface, BaseEntity, type IdValueObject } from '@modules/shared'
 
-import { type FarmAreaValueObject, type FarmNameValueObject } from '../valueObject'
+import { type FarmAreaValueObject, type FarmNameValueObject, type FarmTilthValueObject } from '../valueObject'
 
 interface Input {
   id?: IdValueObject
@@ -10,6 +10,7 @@ interface Input {
   totalArea: FarmAreaValueObject
   arableArea: FarmAreaValueObject
   vegetationArea: FarmAreaValueObject
+  cultures?: FarmTilthValueObject[]
   createdAt?: Date
   updatedAt?: Date
 }
@@ -21,8 +22,9 @@ export class FarmEntity extends BaseEntity implements AggregateRootInterface {
   private readonly _totalArea: FarmAreaValueObject
   private readonly _arableArea: FarmAreaValueObject
   private readonly _vegetationArea: FarmAreaValueObject
+  private readonly _cultures: FarmTilthValueObject[]
 
-  constructor ({ id, name, city, state, totalArea, arableArea, vegetationArea, createdAt, updatedAt }: Input) {
+  constructor ({ id, name, city, state, totalArea, arableArea, vegetationArea, cultures, createdAt, updatedAt }: Input) {
     super(id, createdAt, updatedAt)
     this._name = name
     this._city = city
@@ -30,6 +32,7 @@ export class FarmEntity extends BaseEntity implements AggregateRootInterface {
     this._totalArea = totalArea
     this._arableArea = arableArea
     this._vegetationArea = vegetationArea
+    this._cultures = cultures ?? []
     this.validate()
   }
 
@@ -55,6 +58,10 @@ export class FarmEntity extends BaseEntity implements AggregateRootInterface {
 
   get vegetationArea (): FarmAreaValueObject {
     return this._vegetationArea
+  }
+
+  get cultures (): FarmTilthValueObject[] {
+    return this._cultures
   }
 
   private validate (): void {

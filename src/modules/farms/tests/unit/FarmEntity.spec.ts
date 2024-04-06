@@ -1,5 +1,5 @@
 import { FarmEntity, InvalidCheckAreaError } from '@modules/farms/domain/entity'
-import { FarmAreaValueObject, FarmNameValueObject } from '@modules/farms/domain/valueObject'
+import { FarmAreaValueObject, FarmNameValueObject, FarmTilthValueObject, InvalidTilthError } from '@modules/farms/domain/valueObject'
 import { IdValueObject, InvalidSimpleNameError } from '@modules/shared'
 import { Chance } from 'chance'
 
@@ -11,6 +11,9 @@ const stateString = chance.province()
 const totalAreaNumber = 1000
 const arableArea = 300
 const vegetationArea = 400
+const cultureOne = new FarmTilthValueObject('coffee')
+const cultureTwo = new FarmTilthValueObject('sugarcane')
+const cultures = [cultureOne, cultureTwo]
 
 const farmerStub = {
   name: new FarmNameValueObject(nameString),
@@ -59,6 +62,31 @@ describe('FarmEntity Unit Tests', () => {
     expect(farmerEntity.arableArea.value).toBe(arableArea)
     expect(farmerEntity.vegetationArea).toBeInstanceOf(FarmAreaValueObject)
     expect(farmerEntity.vegetationArea.value).toBe(vegetationArea)
+  })
+
+  it('should be create a new farm entity with cultures', () => {
+    const farmerEntity = new FarmEntity({
+      ...farmerStub,
+      cultures
+    })
+    expect(farmerEntity).toBeInstanceOf(FarmEntity)
+    expect(farmerEntity.name).toBeInstanceOf(FarmNameValueObject)
+    expect(farmerEntity.name.value).toBe(nameString)
+    expect(farmerEntity.city).toBeInstanceOf(FarmNameValueObject)
+    expect(farmerEntity.city.value).toBe(cityString)
+    expect(farmerEntity.state).toBeInstanceOf(FarmNameValueObject)
+    expect(farmerEntity.state.value).toBe(stateString)
+    expect(farmerEntity.totalArea).toBeInstanceOf(FarmAreaValueObject)
+    expect(farmerEntity.totalArea.value).toBe(totalAreaNumber)
+    expect(farmerEntity.arableArea).toBeInstanceOf(FarmAreaValueObject)
+    expect(farmerEntity.arableArea.value).toBe(arableArea)
+    expect(farmerEntity.vegetationArea).toBeInstanceOf(FarmAreaValueObject)
+    expect(farmerEntity.vegetationArea.value).toBe(vegetationArea)
+    expect(farmerEntity.cultures).toHaveLength(2)
+    expect(farmerEntity.cultures[0]).toBeInstanceOf(FarmTilthValueObject)
+    expect(farmerEntity.cultures[0].value).toBe(cultures[0].value)
+    expect(farmerEntity.cultures[1]).toBeInstanceOf(FarmTilthValueObject)
+    expect(farmerEntity.cultures[1].value).toBe(cultures[1].value)
   })
 
   it('should be create a new farm entity with createdAt and updatedAt', () => {
@@ -161,5 +189,14 @@ describe('FarmEntity Unit Tests', () => {
         vegetationArea: new FarmAreaValueObject(700)
       })
     }).toThrow(new InvalidCheckAreaError())
+  })
+
+  it('should be create a new farm entity with invalid tilths', () => {
+    expect(() => {
+      new FarmEntity({
+        ...farmerStub,
+        cultures: [new FarmTilthValueObject('' as any)]
+      })
+    }).toThrow(new InvalidTilthError())
   })
 })
