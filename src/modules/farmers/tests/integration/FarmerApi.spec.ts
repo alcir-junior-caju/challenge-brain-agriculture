@@ -1,36 +1,15 @@
-import { FarmerEntity } from '@modules/farmers/domain'
-import { FarmerRepository } from '@modules/farmers/repository'
-import { AxiosAdapter, EmailValueObject, IdValueObject, NameValueObject, PgPromiseAdapter, TaxIdValueObject } from '@modules/shared'
+import { AxiosAdapter } from '@modules/shared'
 import { Chance } from 'chance'
 
 const chance = new Chance()
-const idString = chance.guid()
-const nameString = chance.name()
-const emailString = chance.email()
-const documentString = chance.cpf({ formatted: false })
-const nameChangedString = chance.name()
-const emailChangedString = chance.email()
-const documentChangedString = chance.cpf({ formatted: false })
 
 describe('FarmerApi Integration Tests', () => {
-  let connection: PgPromiseAdapter
-  let farmerRepository: FarmerRepository
-
-  beforeEach(async () => {
-    connection = new PgPromiseAdapter()
-    farmerRepository = new FarmerRepository(connection)
-  })
-
-  afterEach(async () => {
-    await connection.close()
-  })
-
   it('should post farmer api', async () => {
     const httpClient = new AxiosAdapter()
     const input = {
-      name: nameString,
-      email: emailString,
-      document: documentString
+      name: chance.name(),
+      email: chance.email(),
+      document: chance.cpf({ formatted: false })
     }
     const response = await httpClient.post('http://localhost:3000/farmers', input)
     const { data } = response
@@ -43,15 +22,15 @@ describe('FarmerApi Integration Tests', () => {
       createdAt: expect.any(String),
       updatedAt: expect.any(String)
     })
-    await farmerRepository.delete(data.id)
+    await httpClient.delete(`http://localhost:3000/farmers/${data.id}`)
   })
 
   it('should post farmer with empty name api', async () => {
     const httpClient = new AxiosAdapter()
     const input = {
       name: '',
-      email: emailString,
-      document: documentString
+      email: chance.email(),
+      document: chance.cpf({ formatted: false })
     }
     const response = await httpClient.post('http://localhost:3000/farmers', input)
     const { data } = response
@@ -65,9 +44,9 @@ describe('FarmerApi Integration Tests', () => {
   it('should post farmer with invalid email api', async () => {
     const httpClient = new AxiosAdapter()
     const input = {
-      name: nameString,
+      name: chance.name(),
       email: 'john@t',
-      document: documentString
+      document: chance.cpf({ formatted: false })
     }
     const response = await httpClient.post('http://localhost:3000/farmers', input)
     const { data } = response
@@ -81,84 +60,79 @@ describe('FarmerApi Integration Tests', () => {
 
   it('should update farmer api', async () => {
     const httpClient = new AxiosAdapter()
-    const entity = new FarmerEntity({
-      id: new IdValueObject(idString),
-      name: new NameValueObject(nameString),
-      email: new EmailValueObject(emailString),
-      document: new TaxIdValueObject(documentString)
-    })
-    await farmerRepository.save(entity)
+    const inputCreate = {
+      name: chance.name(),
+      email: chance.email(),
+      document: chance.cpf({ formatted: false })
+    }
+    const responseCreated = await httpClient.post('http://localhost:3000/farmers', inputCreate)
     const input = {
-      name: nameChangedString,
-      email: emailChangedString,
-      document: documentChangedString
+      name: chance.name(),
+      email: chance.email(),
+      document: chance.cpf({ formatted: false })
     }
     const response = await httpClient.patch(
-      `http://localhost:3000/farmers/${entity.id.value}`,
+      `http://localhost:3000/farmers/${responseCreated.data.id}`,
       input
     )
     const { data } = response
     expect(response.status).toBe(200)
     expect(data).toEqual({
-      id: entity.id.value,
+      id: responseCreated.data.id,
       name: input.name,
       email: input.email,
       document: input.document,
       createdAt: expect.any(String),
       updatedAt: expect.any(String)
     })
-    await farmerRepository.delete(entity.id.value)
+    await httpClient.delete(`http://localhost:3000/farmers/${data.id}`)
   })
 
   it('should get farmer api', async () => {
     const httpClient = new AxiosAdapter()
-    const entity = new FarmerEntity({
-      id: new IdValueObject(idString),
-      name: new NameValueObject(nameString),
-      email: new EmailValueObject(emailString),
-      document: new TaxIdValueObject(documentString)
-    })
-    await farmerRepository.save(entity)
-    const response = await httpClient.get(`http://localhost:3000/farmers/${entity.id.value}`)
+    const inputCreate = {
+      name: chance.name(),
+      email: chance.email(),
+      document: chance.cpf({ formatted: false })
+    }
+    const responseCreated = await httpClient.post('http://localhost:3000/farmers', inputCreate)
+    const response = await httpClient.get(`http://localhost:3000/farmers/${responseCreated.data.id}`)
     expect(response.status).toBe(200)
     expect(response.data).toEqual({
-      id: entity.id.value,
-      name: entity.name.value,
-      email: entity.email.value,
-      document: entity.document.value,
+      id: responseCreated.data.id,
+      name: responseCreated.data.name,
+      email: responseCreated.data.email,
+      document: responseCreated.data.document,
       createdAt: expect.any(String),
       updatedAt: expect.any(String)
     })
-    await farmerRepository.delete(entity.id.value)
+    await httpClient.delete(`http://localhost:3000/farmers/${responseCreated.data.id}`)
   })
 
   it('should get farmers api', async () => {
     const httpClient = new AxiosAdapter()
-    const entity = new FarmerEntity({
-      id: new IdValueObject(idString),
-      name: new NameValueObject(nameString),
-      email: new EmailValueObject(emailString),
-      document: new TaxIdValueObject(documentString)
-    })
-    await farmerRepository.save(entity)
+    const inputCreate = {
+      name: chance.name(),
+      email: chance.email(),
+      document: chance.cpf({ formatted: false })
+    }
+    const responseCreated = await httpClient.post('http://localhost:3000/farmers', inputCreate)
     const response = await httpClient.get('http://localhost:3000/farmers')
     expect(response.status).toBe(200)
     expect(response.data.length).toBeGreaterThan(0)
-    await farmerRepository.delete(entity.id.value)
+    await httpClient.delete(`http://localhost:3000/farmers/${responseCreated.data.id}`)
   })
 
   it('should remove farmer api', async () => {
     const httpClient = new AxiosAdapter()
-    const entity = new FarmerEntity({
-      id: new IdValueObject(idString),
-      name: new NameValueObject(nameString),
-      email: new EmailValueObject(emailString),
-      document: new TaxIdValueObject(documentString)
-    })
-    await farmerRepository.save(entity)
-    const response = await httpClient.delete(`http://localhost:3000/farmers/${entity.id.value}`)
+    const inputCreate = {
+      name: chance.name(),
+      email: chance.email(),
+      document: chance.cpf({ formatted: false })
+    }
+    const responseCreated = await httpClient.post('http://localhost:3000/farmers', inputCreate)
+    const response = await httpClient.delete(`http://localhost:3000/farmers/${responseCreated.data.id}`)
     expect(response.status).toBe(200)
-    console.log('🚀 ~ it ~ response:', response)
     expect(response.data).toEqual({})
   })
 })

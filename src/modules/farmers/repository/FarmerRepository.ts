@@ -15,7 +15,7 @@ export class FarmerRepository implements FarmerRepositoryInterface {
   }
 
   async update (farmer: FarmerEntity): Promise<void> {
-    await this.connection.query('UPDATE brain_agriculture.farmers SET name = $1, email = $2, document = $3 WHERE id = $4', [farmer.name.value, farmer.email.value, farmer.document.value, farmer.id.value])
+    await this.connection.query('UPDATE brain_agriculture.farmers SET name = $1, email = $2, document = $3, updated_at = $4 WHERE id = $5', [farmer.name.value, farmer.email.value, farmer.document.value, farmer.updatedAt, farmer.id.value])
   }
 
   async find (id: string): Promise<FarmerEntity> {

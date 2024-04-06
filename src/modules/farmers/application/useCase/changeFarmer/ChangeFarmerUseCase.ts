@@ -1,6 +1,6 @@
 import { type FarmerRepositoryInterface } from '@modules/farmers'
 import { FarmerEntity } from '@modules/farmers/domain'
-import { EmailValueObject, NameValueObject, TaxIdValueObject, TaxPayerIdValueObject, type UseCaseInterface } from '@modules/shared'
+import { EmailValueObject, IdValueObject, NameValueObject, TaxIdValueObject, TaxPayerIdValueObject, type UseCaseInterface } from '@modules/shared'
 
 import { type InputChangeFarmerDto, type OutputChangeFarmerDto } from './ChangeFarmerDto'
 
@@ -20,6 +20,7 @@ export class ChangeFarmerUseCase implements UseCaseInterface<InputChangeFarmerDt
       ...(farmer?.document && farmer.document.length === 14 && { document: new TaxPayerIdValueObject(farmer.document) })
     }
     const entity = new FarmerEntity({
+      id: new IdValueObject(id),
       name: farmer?.name ? new NameValueObject(farmer.name) : farmerExists.name,
       email: farmer?.email ? new EmailValueObject(farmer.email) : farmerExists.email,
       document: checkDocumentTaxIdOrTaxPayerId?.document ? checkDocumentTaxIdOrTaxPayerId.document : farmerExists.document,
@@ -31,7 +32,7 @@ export class ChangeFarmerUseCase implements UseCaseInterface<InputChangeFarmerDt
       name: entity.name.value,
       email: entity.email.value,
       document: entity.document.value,
-      createdAt: entity.createdAt,
+      createdAt: farmerExists.createdAt,
       updatedAt: entity.updatedAt
     }
   }
