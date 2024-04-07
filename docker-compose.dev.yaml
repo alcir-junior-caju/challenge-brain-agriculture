@@ -34,6 +34,6 @@ services:
       - 5432:5432
     volumes:
       - ./databases/dumps/postgres.sql:/docker-entrypoint-initdb.d/postgres.sql
-      # - ./databases/postgres:/var/lib/postgresql/data # Uncomment this line to persist the database
+      - ./databases/postgres:/var/lib/postgresql/data
     networks:
       - brain-agriculture
