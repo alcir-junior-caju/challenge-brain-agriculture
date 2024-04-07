@@ -6,7 +6,16 @@ const tags = ['Farmers']
 const farmerSchemaRequestRequired = z.object({
   name: z.string().min(3),
   email: z.string().email(),
-  document: z.string()
+  document: z.string(),
+  farm: z.object({
+    name: z.string().min(3),
+    city: z.string().min(3),
+    state: z.string().min(2).max(2),
+    totalArea: z.number().positive(),
+    arableArea: z.number().positive(),
+    vegetationArea: z.number().positive(),
+    cultures: z.array(z.string())
+  })
 })
 
 const farmerSchemaRequestOptional = z.object({

@@ -7,6 +7,12 @@ const idString = chance.guid()
 const nameString = chance.name()
 const emailString = chance.email()
 const documentString = chance.cpf({ formatted: false })
+const cityString = chance.state({ full: true })
+const stateString = chance.province()
+const totalAreaNumber = 1000
+const arableAreaNumber = 400
+const vegetationAreaNumber = 200
+const cultures = ['coffee', 'sugarcane']
 const invalidIdString = chance.word()
 const invalidNameString = chance.letter({ length: 1 })
 const invalidEmailString = chance.word()
@@ -19,7 +25,7 @@ const farmerStub = new FarmerEntity({
 })
 
 const MockFarmerRepository = (): FarmerRepositoryInterface => ({
-  save: vitest.fn(),
+  save: vitest.fn().mockResolvedValue(Promise.resolve()),
   update: vitest.fn(),
   find: vitest.fn().mockResolvedValue(Promise.resolve(farmerStub)),
   findAll: vitest.fn().mockResolvedValue(Promise.resolve([farmerStub])),
@@ -34,7 +40,16 @@ describe('CreateFarmerUseCase Unit Tests', () => {
       id: idString,
       name: nameString,
       email: emailString,
-      document: documentString
+      document: documentString,
+      farm: {
+        name: nameString,
+        city: cityString,
+        state: stateString,
+        totalArea: totalAreaNumber,
+        arableArea: arableAreaNumber,
+        vegetationArea: vegetationAreaNumber,
+        cultures
+      }
     }
     const output = await persistFarmerUseCase.execute(input)
     expect(farmerRepository.save).toBeCalledTimes(1)
@@ -44,6 +59,27 @@ describe('CreateFarmerUseCase Unit Tests', () => {
     expect(output.document).toBe(input.document)
   })
 
+  it('should be able to persist a farmer with invalid farm', async () => {
+    const farmerRepository = MockFarmerRepository()
+    const persistFarmerUseCase = new CreateFarmerUseCase(farmerRepository)
+    const input = {
+      id: idString,
+      name: nameString,
+      email: emailString,
+      document: documentString,
+      farm: {
+        name: '',
+        city: cityString,
+        state: stateString,
+        totalArea: totalAreaNumber,
+        arableArea: arableAreaNumber,
+        vegetationArea: vegetationAreaNumber,
+        cultures
+      }
+    }
+    await expect(persistFarmerUseCase.execute(input)).rejects.toThrow(new Error('simple_name_must_be_a_valid_name'))
+  })
+
   it('should be able to persist a farmer with document tax payer id', async () => {
     const farmerRepository = MockFarmerRepository()
     const persistFarmerUseCase = new CreateFarmerUseCase(farmerRepository)
@@ -51,7 +87,16 @@ describe('CreateFarmerUseCase Unit Tests', () => {
       id: idString,
       name: nameString,
       email: emailString,
-      document: '73300397000100'
+      document: '73300397000100',
+      farm: {
+        name: nameString,
+        city: cityString,
+        state: stateString,
+        totalArea: totalAreaNumber,
+        arableArea: arableAreaNumber,
+        vegetationArea: vegetationAreaNumber,
+        cultures
+      }
     }
     const output = await persistFarmerUseCase.execute(input)
     expect(farmerRepository.save).toBeCalledTimes(1)
@@ -68,7 +113,16 @@ describe('CreateFarmerUseCase Unit Tests', () => {
       id: invalidIdString,
       name: nameString,
       email: emailString,
-      document: documentString
+      document: documentString,
+      farm: {
+        name: nameString,
+        city: cityString,
+        state: stateString,
+        totalArea: totalAreaNumber,
+        arableArea: arableAreaNumber,
+        vegetationArea: vegetationAreaNumber,
+        cultures
+      }
     }
     await expect(persistFarmerUseCase.execute(input)).rejects.toThrow(new InvalidUUIDError())
   })
@@ -80,7 +134,16 @@ describe('CreateFarmerUseCase Unit Tests', () => {
       id: idString,
       name: invalidNameString,
       email: emailString,
-      document: documentString
+      document: documentString,
+      farm: {
+        name: nameString,
+        city: cityString,
+        state: stateString,
+        totalArea: totalAreaNumber,
+        arableArea: arableAreaNumber,
+        vegetationArea: vegetationAreaNumber,
+        cultures
+      }
     }
     await expect(persistFarmerUseCase.execute(input)).rejects.toThrow(new InvalidNameError())
   })
@@ -92,7 +155,16 @@ describe('CreateFarmerUseCase Unit Tests', () => {
       id: idString,
       name: nameString,
       email: invalidEmailString,
-      document: documentString
+      document: documentString,
+      farm: {
+        name: nameString,
+        city: cityString,
+        state: stateString,
+        totalArea: totalAreaNumber,
+        arableArea: arableAreaNumber,
+        vegetationArea: vegetationAreaNumber,
+        cultures
+      }
     }
     await expect(persistFarmerUseCase.execute(input)).rejects.toThrow(new InvalidEmailError())
   })
@@ -103,7 +175,16 @@ describe('CreateFarmerUseCase Unit Tests', () => {
     const input = {
       id: idString,
       name: nameString,
-      email: emailString
+      email: emailString,
+      farm: {
+        name: nameString,
+        city: cityString,
+        state: stateString,
+        totalArea: totalAreaNumber,
+        arableArea: arableAreaNumber,
+        vegetationArea: vegetationAreaNumber,
+        cultures
+      }
     }
     await expect(persistFarmerUseCase.execute({
       ...input,

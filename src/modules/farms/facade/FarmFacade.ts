@@ -38,6 +38,7 @@ export class FarmFacade implements FarmFacadeInterface {
   async change (input: InputChangeFarmFacadeDto): Promise<OutputChangeFarmFacadeDto> {
     const inputFacade = {
       id: input.id,
+      farmerId: input.farmerId,
       name: input.name,
       city: input.city,
       state: input.state,

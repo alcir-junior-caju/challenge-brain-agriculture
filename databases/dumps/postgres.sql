@@ -23,5 +23,5 @@ CREATE TABLE brain_agriculture.farms (
   cultures TEXT[] NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  FOREIGN KEY (farmer_id) REFERENCES brain_agriculture.farmers(id)
+  FOREIGN KEY (farmer_id) REFERENCES brain_agriculture.farmers(id) ON DELETE CASCADE
 )

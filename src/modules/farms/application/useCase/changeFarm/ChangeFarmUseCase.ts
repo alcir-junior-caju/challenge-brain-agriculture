@@ -19,7 +19,7 @@ export class ChangeFarmUseCase implements UseCaseInterface<InputChangeFarmDto, O
     const cultures = farm?.cultures ? farm.cultures.map((culture: string) => new FarmTilthValueObject(culture as any)) : []
     const inputFarm = new FarmEntity({
       id: new IdValueObject(id),
-      farmerId: farm?.farmerId ? new IdValueObject(input.farmerId) : farmExists.farmerId,
+      farmerId: farm?.farmerId ? new IdValueObject(farm.farmerId) : farmExists.farmerId,
       name: farm?.name ? new FarmNameValueObject(farm?.name) : farmExists.name,
       city: farm?.city ? new FarmNameValueObject(farm?.city) : farmExists.city,
       state: farm?.state ? new FarmNameValueObject(farm?.state) : farmExists.state,

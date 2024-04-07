@@ -7,6 +7,12 @@ const idString = chance.guid()
 const nameString = chance.name()
 const emailString = chance.email()
 const documentString = chance.cpf({ formatted: false })
+const cityString = chance.state({ full: true })
+const stateString = chance.province()
+const totalAreaNumber = 1000
+const arableAreaNumber = 400
+const vegetationAreaNumber = 200
+const cultures = ['coffee', 'sugarcane']
 
 const farmerStub = new FarmerEntity({
   id: new IdValueObject(idString),
@@ -31,7 +37,16 @@ describe('RemoveFarmerUseCase Unit Tests', () => {
       id: idString,
       name: nameString,
       email: emailString,
-      document: documentString
+      document: documentString,
+      farm: {
+        name: nameString,
+        city: cityString,
+        state: stateString,
+        totalArea: totalAreaNumber,
+        arableArea: arableAreaNumber,
+        vegetationArea: vegetationAreaNumber,
+        cultures
+      }
     }
     await createFarmerUseCase.execute(inputCreateFarmer)
     const removeFarmerUseCase = new RemoveFarmerUseCase(farmerRepository)

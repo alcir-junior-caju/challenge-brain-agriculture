@@ -13,7 +13,16 @@ User-Agent: {{userAgent}}
 {
 	"name": "John Doe",
 	"email": "johndoe@email.com",
-	"document": "44830197000161"
+	"document": "44830197000161",
+  "farm": {
+    "name": "Farm 1",
+    "city": "City 1",
+    "state": "ST",
+    "totalArea": 1000,
+    "arableArea": 300,
+    "vegetationArea": 200,
+    "cultures": ["soya", "cotton"]
+  }
 }
 
 ### Extract farmerId
