@@ -1,7 +1,7 @@
-import { type ConnectionInterface, EmailValueObject, IdValueObject, NameValueObject, TaxIdValueObject, TaxPayerIdValueObject } from '@modules/shared'
+import { type ConnectionInterface } from '@modules/shared'
 
 import { type FarmerRepositoryInterface } from '../application'
-import { FarmerEntity } from '../domain'
+import { type FarmerEntity } from '../domain'
 
 export class FarmerRepository implements FarmerRepositoryInterface {
   connection: ConnectionInterface
@@ -18,33 +18,17 @@ export class FarmerRepository implements FarmerRepositoryInterface {
     await this.connection.query('UPDATE brain_agriculture.farmers SET name = $1, email = $2, document = $3, updated_at = $4 WHERE id = $5', [farmer.name.value, farmer.email.value, farmer.document.value, farmer.updatedAt, farmer.id.value])
   }
 
-  async find (id: string): Promise<FarmerEntity> {
-    const [farmerData] = await this.connection.query('SELECT * FROM brain_agriculture.farmers WHERE id = $1', [id])
+  async find (id: string): Promise<Record<string, any>> {
+    const [farmerData] = await this.connection.query('SELECT farmers.*, farms.id AS farm_id, farms.name AS farm_name, farms.city, farms.state, farms.total_area, farms.arable_area, farms.vegetation_area, farms.cultures, farms.created_at AS farm_created_at, farms.updated_at AS farm_updated_at FROM brain_agriculture.farmers AS farmers LEFT JOIN brain_agriculture.farms AS farms ON farmers.id = farms.farmer_id WHERE farmers.id = $1', [id])
     if (!farmerData) throw new Error('farmer_not_found')
-    const farmerEntity = new FarmerEntity({
-      id: new IdValueObject(String(farmerData.id)),
-      name: new NameValueObject(farmerData.name),
-      email: new EmailValueObject(farmerData.email),
-      document: farmerData.document.length === 11 ? new TaxIdValueObject(farmerData.document) : new TaxPayerIdValueObject(farmerData.document),
-      createdAt: farmerData.created_at,
-      updatedAt: farmerData.updated_at
-    })
-    return farmerEntity
+    return farmerData
   }
 
-  async findAll (): Promise<FarmerEntity[]> {
-    const farmersData = await this.connection.query('SELECT * FROM brain_agriculture.farmers')
+  async findAll (): Promise<any[]> {
+    const farmersData = await this.connection.query('SELECT farmers.*, farms.id AS farm_id, farms.name AS farm_name, farms.city, farms.state, farms.total_area, farms.arable_area, farms.vegetation_area, farms.cultures, farms.created_at AS farm_created_at, farms.updated_at AS farm_updated_at FROM brain_agriculture.farmers AS farmers LEFT JOIN brain_agriculture.farms AS farms ON farmers.id = farms.farmer_id')
     const farmers = []
     for (const farmerData of farmersData) {
-      const farmerEntity = new FarmerEntity({
-        id: new IdValueObject(String(farmerData.id)),
-        name: new NameValueObject(farmerData.name),
-        email: new EmailValueObject(farmerData.email),
-        document: farmerData.document.length === 11 ? new TaxIdValueObject(farmerData.document) : new TaxPayerIdValueObject(farmerData.document),
-        createdAt: farmerData.created_at,
-        updatedAt: farmerData.updated_at
-      })
-      farmers.push(farmerEntity)
+      farmers.push(farmerData)
     }
     return farmers
   }

@@ -36,7 +36,16 @@ User-Agent: {{userAgent}}
 
 {
 	"name": "Jane Doe",
-	"email": "janedoe@email.com"
+	"email": "janedoe@email.com",
+  "farm": {
+    "name": "Farm 2",
+    "city": "City 2",
+    "state": "ST",
+    "totalArea": 2000,
+    "arableArea": 400,
+    "vegetationArea": 300,
+    "cultures": ["soya"]
+  }
 }
 
 ### GET /farmers

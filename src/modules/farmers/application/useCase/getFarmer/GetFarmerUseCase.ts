@@ -15,10 +15,21 @@ export class GetFarmerUseCase implements UseCaseInterface<InputGetFarmerDto, Out
     const farmer = await this._farmerRepository.find(input.id)
     if (!farmer) throw new Error('farmer_not_found')
     return {
-      id: farmer.id.value,
-      name: farmer.name.value,
-      email: farmer.email.value,
-      document: farmer.document.value,
+      id: farmer.id,
+      name: farmer.name,
+      email: farmer.email,
+      document: farmer.document,
+      farm: {
+        name: farmer.farm_name,
+        city: farmer.city,
+        state: farmer.state,
+        totalArea: farmer.total_area,
+        arableArea: farmer.arable_area,
+        vegetationArea: farmer.vegetation_area,
+        cultures: farmer.cultures,
+        createdAt: farmer.farm_created_at,
+        updatedAt: farmer.farm_updated_at
+      },
       createdAt: farmer.createdAt,
       updatedAt: farmer.updatedAt
     }
