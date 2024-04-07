@@ -1,4 +1,4 @@
-DROP SCHEMA IF EXISTS brain_agriculture cascade;
+DROP SCHEMA IF EXISTS brain_agriculture CASCADE;
 
 CREATE SCHEMA brain_agriculture;
 
@@ -13,6 +13,7 @@ CREATE TABLE brain_agriculture.farmers (
 
 CREATE TABLE brain_agriculture.farms (
   id UUID PRIMARY KEY,
+  farmer_id UUID UNIQUE,
   name TEXT NOT NULL,
   city TEXT NOT NULL,
   state TEXT NOT NULL,
@@ -21,5 +22,6 @@ CREATE TABLE brain_agriculture.farms (
   vegetation_area NUMERIC NOT NULL,
   cultures TEXT[] NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  FOREIGN KEY (farmer_id) REFERENCES brain_agriculture.farmers(id)
 )
