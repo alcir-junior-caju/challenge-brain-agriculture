@@ -31,10 +31,11 @@ describe('GetFarmersUseCase Unit Tests', () => {
     const output = await getFarmerUseCase.execute(input)
     expect(farmerRepository.findAll).toBeCalledTimes(1)
     expect(output).toEqual([{
-      id: farmerStub.id.value,
-      name: farmerStub.name.value,
-      email: farmerStub.email.value,
-      document: farmerStub.document.value,
+      id: farmerStub.id,
+      name: farmerStub.name,
+      email: farmerStub.email,
+      document: farmerStub.document,
+      farm: expect.any(Object),
       createdAt: farmerStub.createdAt,
       updatedAt: farmerStub.updatedAt
     }])

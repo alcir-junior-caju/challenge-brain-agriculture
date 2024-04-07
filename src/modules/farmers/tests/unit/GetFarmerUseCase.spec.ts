@@ -32,10 +32,10 @@ describe('GetFarmerUseCase Unit Tests', () => {
     }
     const output = await getFarmerUseCase.execute(input)
     expect(farmerRepository.find).toBeCalledTimes(1)
-    expect(output.id).toBe(farmerStub.id.value)
-    expect(output.name).toBe(farmerStub.name.value)
-    expect(output.email).toBe(farmerStub.email.value)
-    expect(output.document).toBe(farmerStub.document.value)
+    expect(output.id.value).toBe(farmerStub.id.value)
+    expect(output.name.value).toBe(farmerStub.name.value)
+    expect(output.email.value).toBe(farmerStub.email.value)
+    expect(output.document.value).toBe(farmerStub.document.value)
   })
 
   it('should not be able to get a farmer if not exists', async () => {
