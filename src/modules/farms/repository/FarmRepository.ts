@@ -23,6 +23,7 @@ export class FarmRepository implements FarmRepositoryInterface {
     if (!farmData) throw new Error('farm_not_found')
     const farmEntity = new FarmEntity({
       id: new IdValueObject(String(farmData.id)),
+      farmerId: farmData.farmer_id ? new IdValueObject(String(farmData.farmer_id)) : undefined,
       name: new FarmNameValueObject(farmData.name),
       city: new FarmNameValueObject(farmData.city),
       state: new FarmNameValueObject(farmData.state),
