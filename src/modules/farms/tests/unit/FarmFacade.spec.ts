@@ -12,7 +12,7 @@ const vegetationArea = 400
 const cultures = ['coffee', 'sugarcane']
 
 describe('FarmFacade Unit Tests', () => {
-  it('should be create a new farm entity', async () => {
+  it('should be create a new farm', async () => {
     const farmFacade = FarmFacadeFactory.create()
     const input = {
       id: idString,
@@ -37,5 +37,25 @@ describe('FarmFacade Unit Tests', () => {
     expect(output.cultures).toEqual(cultures)
     expect(output.createdAt).toEqual(expect.any(Date))
     expect(output.updatedAt).toEqual(expect.any(Date))
+    await farmFacade.remove({ id: idString })
+  })
+
+  it('should be remove a farm', async () => {
+    const farmFacade = FarmFacadeFactory.create()
+    const input = {
+      id: idString,
+      name: nameString,
+      city: cityString,
+      state: stateString,
+      totalArea: totalAreaNumber,
+      arableArea,
+      vegetationArea,
+      cultures,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+    await farmFacade.create(input)
+    const output = await farmFacade.remove({ id: idString })
+    expect(output).toEqual({})
   })
 })

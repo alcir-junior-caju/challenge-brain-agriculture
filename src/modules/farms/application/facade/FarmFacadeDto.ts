@@ -1,4 +1,4 @@
-export interface InputFarmFacadeDto {
+export interface InputCreateFarmFacadeDto {
   id: string
   name: string
   city: string
@@ -11,7 +11,7 @@ export interface InputFarmFacadeDto {
   updatedAt?: Date
 }
 
-export interface OutputFarmFacadeDto {
+export interface OutputCreateFarmFacadeDto {
   id: string
   name: string
   city: string
@@ -23,3 +23,9 @@ export interface OutputFarmFacadeDto {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface InputRemoveFarmFacadeDto {
+  id: string
+}
+
+export interface OutputRemoveFarmFacadeDto {}
