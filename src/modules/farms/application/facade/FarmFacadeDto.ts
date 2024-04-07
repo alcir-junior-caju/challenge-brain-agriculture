@@ -1,5 +1,6 @@
 export interface InputCreateFarmFacadeDto {
   id: string
+  farmerId?: string
   name: string
   city: string
   state: string

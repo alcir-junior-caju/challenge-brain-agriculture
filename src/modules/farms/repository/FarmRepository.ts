@@ -11,11 +11,11 @@ export class FarmRepository implements FarmRepositoryInterface {
   }
 
   async save (farm: FarmEntity): Promise<void> {
-    await this.connection.query('INSERT INTO brain_agriculture.farms (id, name, city, state, total_area, arable_area, vegetation_area, cultures) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [farm.id.value, farm.name.value, farm.city.value, farm.state.value, farm.totalArea.value, farm.arableArea.value, farm.vegetationArea.value, farm.cultures.map(culture => culture.value)])
+    await this.connection.query('INSERT INTO brain_agriculture.farms (id, farmer_id, name, city, state, total_area, arable_area, vegetation_area, cultures) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [farm.id.value, farm.farmerId?.value, farm.name.value, farm.city.value, farm.state.value, farm.totalArea.value, farm.arableArea.value, farm.vegetationArea.value, farm.cultures.map(culture => culture.value)])
   }
 
   async update (farm: FarmEntity): Promise<void> {
-    await this.connection.query('UPDATE brain_agriculture.farms SET name = $2, city = $3, state = $4, total_area = $5, arable_area = $6, vegetation_area = $7, cultures = $8 WHERE id = $1', [farm.id.value, farm.name.value, farm.city.value, farm.state.value, farm.totalArea.value, farm.arableArea.value, farm.vegetationArea.value, farm.cultures.map(culture => culture.value)])
+    await this.connection.query('UPDATE brain_agriculture.farms SET farmer_id = $2, name = $3, city = $4, state = $5, total_area = $6, arable_area = $7, vegetation_area = $8, cultures = $9 WHERE id = $1', [farm.id.value, farm.farmerId?.value, farm.name.value, farm.city.value, farm.state.value, farm.totalArea.value, farm.arableArea.value, farm.vegetationArea.value, farm.cultures.map(culture => culture.value)])
   }
 
   async find (id: string): Promise<FarmEntity> {

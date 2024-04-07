@@ -1,5 +1,5 @@
-import { type InputFarmFacadeDto, type OutputFarmFacadeDto } from './FarmFacadeDto'
+import { type InputCreateFarmFacadeDto, type OutputCreateFarmFacadeDto } from './FarmFacadeDto'
 
 export interface FarmFacadeInterface {
-  create: (input: InputFarmFacadeDto) => Promise<OutputFarmFacadeDto>
+  create: (input: InputCreateFarmFacadeDto) => Promise<OutputCreateFarmFacadeDto>
 }

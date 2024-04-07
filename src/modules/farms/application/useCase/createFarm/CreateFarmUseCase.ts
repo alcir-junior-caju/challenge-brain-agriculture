@@ -16,6 +16,7 @@ export class CreateFarmUseCase implements UseCaseInterface<InputCreateFarmDto, O
     const cultures = input?.cultures ? input.cultures.map((culture: string) => new FarmTilthValueObject(culture as any)) : []
     const inputFarm = new FarmEntity({
       id: new IdValueObject(input.id),
+      farmerId: input.farmerId ? new IdValueObject(input.farmerId) : undefined,
       name: new FarmNameValueObject(input.name),
       city: new FarmNameValueObject(input.city),
       state: new FarmNameValueObject(input.state),

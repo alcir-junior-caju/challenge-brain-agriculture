@@ -4,6 +4,7 @@ import { type FarmAreaValueObject, type FarmNameValueObject, type FarmTilthValue
 
 interface Input {
   id?: IdValueObject
+  farmerId?: IdValueObject
   name: FarmNameValueObject
   city: FarmNameValueObject
   state: FarmNameValueObject
@@ -16,6 +17,7 @@ interface Input {
 }
 
 export class FarmEntity extends BaseEntity implements AggregateRootInterface {
+  private readonly _farmerId?: IdValueObject
   private readonly _name: FarmNameValueObject
   private readonly _city: FarmNameValueObject
   private readonly _state: FarmNameValueObject
@@ -24,8 +26,9 @@ export class FarmEntity extends BaseEntity implements AggregateRootInterface {
   private readonly _vegetationArea: FarmAreaValueObject
   private readonly _cultures: FarmTilthValueObject[]
 
-  constructor ({ id, name, city, state, totalArea, arableArea, vegetationArea, cultures, createdAt, updatedAt }: Input) {
+  constructor ({ id, farmerId, name, city, state, totalArea, arableArea, vegetationArea, cultures, createdAt, updatedAt }: Input) {
     super(id, createdAt, updatedAt)
+    this._farmerId = farmerId
     this._name = name
     this._city = city
     this._state = state
@@ -34,6 +37,10 @@ export class FarmEntity extends BaseEntity implements AggregateRootInterface {
     this._vegetationArea = vegetationArea
     this._cultures = cultures ?? []
     this.validate()
+  }
+
+  get farmerId (): IdValueObject | undefined {
+    return this._farmerId
   }
 
   get name (): FarmNameValueObject {
