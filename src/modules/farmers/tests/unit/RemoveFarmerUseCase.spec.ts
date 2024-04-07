@@ -1,4 +1,4 @@
-import { FarmerEntity, type FarmerRepositoryInterface, RemoveFarmerUseCase } from '@modules/farmers'
+import { CreateFarmerUseCase, FarmerEntity, type FarmerRepositoryInterface, RemoveFarmerUseCase } from '@modules/farmers'
 import { EmailValueObject, IdValueObject, NameValueObject, TaxIdValueObject } from '@modules/shared'
 import { Chance } from 'chance'
 
@@ -26,21 +26,29 @@ const MockFarmerRepository = (empty?: boolean): FarmerRepositoryInterface => ({
 describe('RemoveFarmerUseCase Unit Tests', () => {
   it('should be able to remove a farmer', async () => {
     const farmerRepository = MockFarmerRepository()
-    const getFarmerUseCase = new RemoveFarmerUseCase(farmerRepository)
+    const createFarmerUseCase = new CreateFarmerUseCase(farmerRepository)
+    const inputCreateFarmer = {
+      id: idString,
+      name: nameString,
+      email: emailString,
+      document: documentString
+    }
+    await createFarmerUseCase.execute(inputCreateFarmer)
+    const removeFarmerUseCase = new RemoveFarmerUseCase(farmerRepository)
     const input = {
       id: idString
     }
-    const output = await getFarmerUseCase.execute(input)
+    const output = await removeFarmerUseCase.execute(input)
     expect(farmerRepository.delete).toBeCalledTimes(1)
     expect(output).toEqual({})
   })
 
   it('should not be able to remove a farmer if not exists', async () => {
     const farmerRepository = MockFarmerRepository(true)
-    const getFarmerUseCase = new RemoveFarmerUseCase(farmerRepository)
+    const removeFarmerUseCase = new RemoveFarmerUseCase(farmerRepository)
     const input = {
       id: idString
     }
-    await expect(getFarmerUseCase.execute(input)).rejects.toThrow('farmer_not_found')
+    await expect(removeFarmerUseCase.execute(input)).rejects.toThrow('farmer_not_found')
   })
 })

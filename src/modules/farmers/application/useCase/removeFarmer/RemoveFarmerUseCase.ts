@@ -14,7 +14,7 @@ export class RemoveFarmerUseCase implements UseCaseInterface<InputRemoveFarmerDt
   async execute (input: InputRemoveFarmerDto): Promise<OutputRemoveFarmerDto> {
     const farmer = await this._farmerRepository.find(input.id)
     if (!farmer) throw new Error('farmer_not_found')
-    await this._farmerRepository.delete(farmer.id.value)
+    await this._farmerRepository.delete(input.id)
     return {}
   }
 }
