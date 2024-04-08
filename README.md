@@ -19,6 +19,7 @@ Para quem quiser visualizar o projeto na IDE clique no teclado a tecla `ponto`, 
 
 ## Como usar
 
+- Duplique o `.env.example` e renomeie ele para `.env`, pode manter os dados que estão lá ou mudar;
 - Na raiz do projeto execute o comando `docker compose -f docker-compose.dev.yaml up --build` esse comando irá subir os containers necessários e já irá executar o modo `dev`;
 - Com isso é já é possível fazer alguns testes via `REST` temos duas formas:
 - Pode se testar via as docs: `http://localhost:3000/docs` veja abaixo a tela de docs:
