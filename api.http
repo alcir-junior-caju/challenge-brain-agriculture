@@ -65,3 +65,10 @@ User-Agent: {{userAgent}}
 DELETE {{baseUrl}}/farmers/{{farmerId}} HTTP/1.1
 Content-Type: {{contentType}}
 User-Agent: {{userAgent}}
+
+### GET /report
+# @name getreport
+# @type count | totalArea | states | cultures | soil
+GET {{baseUrl}}/report/soil HTTP/1.1
+Content-Type: {{contentType}}
+User-Agent: {{userAgent}}

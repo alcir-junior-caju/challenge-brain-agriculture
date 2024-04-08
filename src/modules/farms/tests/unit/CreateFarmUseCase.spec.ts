@@ -31,6 +31,7 @@ const MockFarmRepository = (withCultures?: boolean): FarmRepositoryInterface => 
     ...farmStub,
     ...(withCultures && { cultures })
   })),
+  findAll: vitest.fn(),
   delete: vitest.fn()
 })
 

@@ -37,6 +37,24 @@ export class FarmRepository implements FarmRepositoryInterface {
     return farmEntity
   }
 
+  async findAll (): Promise<FarmEntity[]> {
+    const farmsData = await this.connection.query('SELECT * FROM brain_agriculture.farms')
+    const farmsEntities = farmsData.map((farmData: Record<string, any>) => new FarmEntity({
+      id: new IdValueObject(String(farmData.id)),
+      farmerId: farmData.farmer_id ? new IdValueObject(String(farmData.farmer_id)) : undefined,
+      name: new FarmNameValueObject(farmData.name),
+      city: new FarmNameValueObject(farmData.city),
+      state: new FarmNameValueObject(farmData.state),
+      totalArea: new FarmAreaValueObject(farmData.total_area),
+      arableArea: new FarmAreaValueObject(farmData.arable_area),
+      vegetationArea: new FarmAreaValueObject(farmData.vegetation_area),
+      cultures: farmData.cultures.map((culture: string) => new FarmTilthValueObject(culture as any)),
+      createdAt: farmData.created_at,
+      updatedAt: farmData.updated_at
+    }))
+    return farmsEntities
+  }
+
   async delete (id: string): Promise<void> {
     await this.connection.query('DELETE FROM brain_agriculture.farms WHERE id = $1', [id])
   }
