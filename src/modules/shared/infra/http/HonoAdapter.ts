@@ -44,7 +44,6 @@ export class HonoAdapter implements HttpServerInterface {
             ...(Object.keys(params).length && { params }),
             ...((route.method !== 'get' && route.method !== 'delete') && { body: await context.req.json() })
           }
-          console.log('config', config)
           const output = await callback({ ...config })
           const result = context.json(output)
           endTime(context, 'request')
