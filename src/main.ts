@@ -1,7 +1,7 @@
 import { ChangeFarmerUseCase, CreateFarmerUseCase, FarmerHttpController, FarmerRepository, FarmHttpController, FarmRepository, GetFarmersUseCase, GetFarmerUseCase, GetFarmsUseCase, HonoAdapter, PgPromiseAdapter, RemoveFarmerUseCase } from './modules'
 
 async function main (): Promise<void> {
-  const connection = new PgPromiseAdapter()
+  const connection = PgPromiseAdapter.getInstance()
   const farmerRepository = new FarmerRepository(connection)
   const farmRepository = new FarmRepository(connection)
   const createFarmer = new CreateFarmerUseCase(farmerRepository)

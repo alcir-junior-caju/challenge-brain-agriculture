@@ -16,10 +16,19 @@ const config = {
 const databaseUrl = `${config.client}://${config.user}:${config.password}@${config.host}:${config.port}/${config.database}`
 
 export class PgPromiseAdapter implements ConnectionInterface {
-  connection: any
+  private static instance: PgPromiseAdapter
+  private readonly connection: any
 
   constructor () {
-    this.connection = pgp()(databaseUrl)
+    const pgpInstance = pgp()
+    this.connection = pgpInstance(databaseUrl)
+  }
+
+  static getInstance (): PgPromiseAdapter {
+    if (!PgPromiseAdapter.instance) {
+      PgPromiseAdapter.instance = new PgPromiseAdapter()
+    }
+    return PgPromiseAdapter.instance
   }
 
   async query (statement: string, params?: any): Promise<any> {
