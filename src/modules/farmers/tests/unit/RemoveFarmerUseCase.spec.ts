@@ -1,4 +1,5 @@
 import { CreateFarmerUseCase, FarmerEntity, type FarmerRepositoryInterface, RemoveFarmerUseCase } from '@modules/farmers'
+import { FarmFacadeFactory } from '@modules/farms'
 import { EmailValueObject, IdValueObject, NameValueObject, TaxIdValueObject } from '@modules/shared'
 import { Chance } from 'chance'
 
@@ -7,6 +8,7 @@ const idString = chance.guid()
 const nameString = chance.name()
 const emailString = chance.email()
 const documentString = chance.cpf({ formatted: false })
+const farmIdString = chance.guid()
 const cityString = chance.state({ full: true })
 const stateString = chance.province()
 const totalAreaNumber = 1000
@@ -30,8 +32,27 @@ const MockFarmerRepository = (empty?: boolean): FarmerRepositoryInterface => ({
 })
 
 describe('RemoveFarmerUseCase Unit Tests', () => {
-  // TODO: come back to refactor this test
-  it.skip('should be able to remove a farmer', async () => {
+  it('should be able to remove a farmer', async () => {
+    vitest.spyOn(FarmFacadeFactory, 'create').mockImplementation(() => ({
+      async create () {
+        return await Promise.resolve({
+          id: farmIdString,
+          name: nameString,
+          city: cityString,
+          state: stateString,
+          totalArea: totalAreaNumber,
+          arableArea: arableAreaNumber,
+          vegetationArea: vegetationAreaNumber,
+          cultures
+        })
+      },
+      async change (): Promise<any> {
+        await Promise.resolve()
+      },
+      async remove (): Promise<any> {
+        await Promise.resolve()
+      }
+    }) as any)
     const farmerRepository = MockFarmerRepository()
     const createFarmerUseCase = new CreateFarmerUseCase(farmerRepository)
     const inputCreateFarmer = {

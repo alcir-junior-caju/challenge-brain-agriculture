@@ -24,20 +24,23 @@ export class CreateFarmerUseCase implements UseCaseInterface<InputCreateFarmerDt
       cultures: input.farm.cultures
     }
     const farm = await farmFacade.create(inputFarm)
-    const inputFarmer = {
-      id: new IdValueObject(input.id),
-      name: new NameValueObject(input.name),
-      email: new EmailValueObject(input.email),
-      document: input.document.length === 11 ? new TaxIdValueObject(input.document) : new TaxPayerIdValueObject(input.document),
-      ...(input?.createdAt && { createdAt: input.createdAt }),
-      ...(input?.updatedAt && { updatedAt: input.updatedAt })
-    }
-    const farmer = new FarmerEntity(inputFarmer)
-    if (!farmer) {
+    let farmer: FarmerEntity
+    try {
+      const inputFarmer = {
+        id: new IdValueObject(input.id),
+        name: new NameValueObject(input.name),
+        email: new EmailValueObject(input.email),
+        document: input.document.length === 11 ? new TaxIdValueObject(input.document) : new TaxPayerIdValueObject(input.document),
+        ...(input?.createdAt && { createdAt: input.createdAt }),
+        ...(input?.updatedAt && { updatedAt: input.updatedAt })
+      }
+      farmer = new FarmerEntity(inputFarmer)
+      await this._farmerRepository.save(farmer)
+      await farmFacade.change({ id: farm.id, farmerId: farmer.id.value })
+    } catch (error) {
       await farmFacade.remove({ id: farm.id })
+      throw error
     }
-    await this._farmerRepository.save(farmer)
-    await farmFacade.change({ id: farm.id, farmerId: farmer.id.value })
     return {
       id: farmer.id.value,
       name: farmer.name.value,
