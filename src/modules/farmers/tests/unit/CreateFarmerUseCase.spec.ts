@@ -1,4 +1,5 @@
 import { CreateFarmerUseCase, FarmerEntity, type FarmerRepositoryInterface } from '@modules/farmers'
+import { FarmFacadeFactory } from '@modules/farms'
 import { EmailValueObject, IdValueObject, InvalidEmailError, InvalidNameError, InvalidTaxIdError, InvalidTaxPayerIdError, InvalidUUIDError, NameValueObject, TaxIdValueObject } from '@modules/shared'
 import { Chance } from 'chance'
 
@@ -7,6 +8,7 @@ const idString = chance.guid()
 const nameString = chance.name()
 const emailString = chance.email()
 const documentString = chance.cpf({ formatted: false })
+const farmIdString = chance.guid()
 const cityString = chance.state({ full: true })
 const stateString = chance.province()
 const totalAreaNumber = 1000
@@ -33,8 +35,27 @@ const MockFarmerRepository = (): FarmerRepositoryInterface => ({
 })
 
 describe('CreateFarmerUseCase Unit Tests', () => {
-  // TODO: come back to refactor this test
-  it.skip('should be able to persist a farmer with document tax id', async () => {
+  it('should be able to persist a farmer with document tax id', async () => {
+    vitest.spyOn(FarmFacadeFactory, 'create').mockImplementation(() => ({
+      async create () {
+        return await Promise.resolve({
+          id: farmIdString,
+          name: nameString,
+          city: cityString,
+          state: stateString,
+          totalArea: totalAreaNumber,
+          arableArea: arableAreaNumber,
+          vegetationArea: vegetationAreaNumber,
+          cultures
+        })
+      },
+      async change (): Promise<any> {
+        await Promise.resolve()
+      },
+      async remove (): Promise<any> {
+        await Promise.resolve()
+      }
+    }) as any)
     const farmerRepository = MockFarmerRepository()
     const persistFarmerUseCase = new CreateFarmerUseCase(farmerRepository)
     const input = {
@@ -54,13 +75,35 @@ describe('CreateFarmerUseCase Unit Tests', () => {
     }
     const output = await persistFarmerUseCase.execute(input)
     expect(farmerRepository.save).toBeCalledTimes(1)
+    expect(farmerRepository.save).toHaveBeenCalledWith(expect.any(FarmerEntity))
     expect(output.id).toBe(input.id)
     expect(output.name).toBe(input.name)
     expect(output.email).toBe(input.email)
     expect(output.document).toBe(input.document)
+    expect(output.farm).toEqual({
+      id: farmIdString,
+      name: nameString,
+      city: cityString,
+      state: stateString,
+      totalArea: totalAreaNumber,
+      arableArea: arableAreaNumber,
+      vegetationArea: vegetationAreaNumber,
+      cultures
+    })
   })
 
   it('should be able to persist a farmer with invalid farm', async () => {
+    vitest.spyOn(FarmFacadeFactory, 'create').mockImplementation(() => ({
+      async create () {
+        return await Promise.reject(new Error('simple_name_must_be_a_valid_name'))
+      },
+      async change (): Promise<any> {
+        await Promise.resolve()
+      },
+      async remove (): Promise<any> {
+        await Promise.resolve()
+      }
+    }) as any)
     const farmerRepository = MockFarmerRepository()
     const persistFarmerUseCase = new CreateFarmerUseCase(farmerRepository)
     const input = {
@@ -81,8 +124,27 @@ describe('CreateFarmerUseCase Unit Tests', () => {
     await expect(persistFarmerUseCase.execute(input)).rejects.toThrow(new Error('simple_name_must_be_a_valid_name'))
   })
 
-  // TODO: come back to refactor this test
-  it.skip('should be able to persist a farmer with document tax payer id', async () => {
+  it('should be able to persist a farmer with document tax payer id', async () => {
+    vitest.spyOn(FarmFacadeFactory, 'create').mockImplementation(() => ({
+      async create () {
+        return await Promise.resolve({
+          id: farmIdString,
+          name: nameString,
+          city: cityString,
+          state: stateString,
+          totalArea: totalAreaNumber,
+          arableArea: arableAreaNumber,
+          vegetationArea: vegetationAreaNumber,
+          cultures
+        })
+      },
+      async change (): Promise<any> {
+        await Promise.resolve()
+      },
+      async remove (): Promise<any> {
+        await Promise.resolve()
+      }
+    }) as any)
     const farmerRepository = MockFarmerRepository()
     const persistFarmerUseCase = new CreateFarmerUseCase(farmerRepository)
     const input = {
@@ -106,9 +168,40 @@ describe('CreateFarmerUseCase Unit Tests', () => {
     expect(output.name).toBe(input.name)
     expect(output.email).toBe(input.email)
     expect(output.document).toBe(input.document)
+    expect(output.farm).toEqual({
+      id: farmIdString,
+      name: nameString,
+      city: cityString,
+      state: stateString,
+      totalArea: totalAreaNumber,
+      arableArea: arableAreaNumber,
+      vegetationArea: vegetationAreaNumber,
+      cultures
+    })
   })
 
   it('should be able to persist a farmer with invalid id', async () => {
+    const removeSpy = vitest.fn().mockResolvedValue(Promise.resolve())
+    vitest.spyOn(FarmFacadeFactory, 'create').mockImplementation(() => ({
+      async create () {
+        return await Promise.resolve({
+          id: farmIdString,
+          name: nameString,
+          city: cityString,
+          state: stateString,
+          totalArea: totalAreaNumber,
+          arableArea: arableAreaNumber,
+          vegetationArea: vegetationAreaNumber,
+          cultures
+        })
+      },
+      async change (): Promise<any> {
+        await Promise.resolve()
+      },
+      async remove (): Promise<any> {
+        await removeSpy()
+      }
+    }) as any)
     const farmerRepository = MockFarmerRepository()
     const persistFarmerUseCase = new CreateFarmerUseCase(farmerRepository)
     const input = {
@@ -127,9 +220,31 @@ describe('CreateFarmerUseCase Unit Tests', () => {
       }
     }
     await expect(persistFarmerUseCase.execute(input)).rejects.toThrow(new InvalidUUIDError())
+    expect(removeSpy).toBeCalledTimes(1)
   })
 
   it('should be able to persist a farmer with invalid name', async () => {
+    const removeSpy = vitest.fn().mockResolvedValue(Promise.resolve())
+    vitest.spyOn(FarmFacadeFactory, 'create').mockImplementation(() => ({
+      async create () {
+        return await Promise.resolve({
+          id: farmIdString,
+          name: nameString,
+          city: cityString,
+          state: stateString,
+          totalArea: totalAreaNumber,
+          arableArea: arableAreaNumber,
+          vegetationArea: vegetationAreaNumber,
+          cultures
+        })
+      },
+      async change (): Promise<any> {
+        await Promise.resolve()
+      },
+      async remove (): Promise<any> {
+        await removeSpy()
+      }
+    }) as any)
     const farmerRepository = MockFarmerRepository()
     const persistFarmerUseCase = new CreateFarmerUseCase(farmerRepository)
     const input = {
@@ -148,9 +263,31 @@ describe('CreateFarmerUseCase Unit Tests', () => {
       }
     }
     await expect(persistFarmerUseCase.execute(input)).rejects.toThrow(new InvalidNameError())
+    expect(removeSpy).toBeCalledTimes(1)
   })
 
   it('should be able to persist a farmer with invalid email', async () => {
+    const removeSpy = vitest.fn().mockResolvedValue(Promise.resolve())
+    vitest.spyOn(FarmFacadeFactory, 'create').mockImplementation(() => ({
+      async create () {
+        return await Promise.resolve({
+          id: farmIdString,
+          name: nameString,
+          city: cityString,
+          state: stateString,
+          totalArea: totalAreaNumber,
+          arableArea: arableAreaNumber,
+          vegetationArea: vegetationAreaNumber,
+          cultures
+        })
+      },
+      async change (): Promise<any> {
+        await Promise.resolve()
+      },
+      async remove (): Promise<any> {
+        await removeSpy()
+      }
+    }) as any)
     const farmerRepository = MockFarmerRepository()
     const persistFarmerUseCase = new CreateFarmerUseCase(farmerRepository)
     const input = {
@@ -169,9 +306,31 @@ describe('CreateFarmerUseCase Unit Tests', () => {
       }
     }
     await expect(persistFarmerUseCase.execute(input)).rejects.toThrow(new InvalidEmailError())
+    expect(removeSpy).toBeCalledTimes(1)
   })
 
   it('should be able to persist a farmer with invalid document', async () => {
+    const removeSpy = vitest.fn().mockResolvedValue(Promise.resolve())
+    vitest.spyOn(FarmFacadeFactory, 'create').mockImplementation(() => ({
+      async create () {
+        return await Promise.resolve({
+          id: farmIdString,
+          name: nameString,
+          city: cityString,
+          state: stateString,
+          totalArea: totalAreaNumber,
+          arableArea: arableAreaNumber,
+          vegetationArea: vegetationAreaNumber,
+          cultures
+        })
+      },
+      async change (): Promise<any> {
+        await Promise.resolve()
+      },
+      async remove (): Promise<any> {
+        await removeSpy()
+      }
+    }) as any)
     const farmerRepository = MockFarmerRepository()
     const persistFarmerUseCase = new CreateFarmerUseCase(farmerRepository)
     const input = {
@@ -192,9 +351,11 @@ describe('CreateFarmerUseCase Unit Tests', () => {
       ...input,
       document: '11111111111'
     })).rejects.toThrow(new InvalidTaxIdError())
+    expect(removeSpy).toBeCalledTimes(1)
     await expect(persistFarmerUseCase.execute({
       ...input,
       document: '11111111111111'
     })).rejects.toThrow(new InvalidTaxPayerIdError())
+    expect(removeSpy).toBeCalledTimes(2)
   })
 })
